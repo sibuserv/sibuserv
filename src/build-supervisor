@@ -1,0 +1,198 @@
+#!/bin/bash
+
+##### Setup #####
+
+# Number of compilation processes:
+export JOBS=3
+
+export SOURCES_DIR="${HOME}/BuildServerSVN"
+export BUILD_SERVER_DIR="${HOME}/BuildServer"
+export BUILD_SERVER_LOG="${BUILD_SERVER_DIR}/build-server-daemon.log"
+
+# $ build-project list
+# AstraLinux-1.2_shared
+# AstraLinux-1.2_static
+# AstraLinux-1.3_shared
+# AstraLinux-1.4_shared
+# Ubuntu-14.04-LTS_amd64_shared
+# Ubuntu-14.04-LTS_amd64_static
+# Ubuntu-14.04-LTS_i386_shared
+# Ubuntu-14.04-LTS_i386_static
+# i686-w64-mingw32.static
+# x86_64-w64-mingw32.static
+# android_armv7
+# android_x86
+
+SYSTEMS="i686-w64-mingw32.static
+         x86_64-w64-mingw32.static
+         AstraLinux-1.2_static
+         Ubuntu-14.04-LTS_i386_static
+         android_x86
+         android_armv7"
+
+
+##### Do not edit lines below! #####
+
+##### Some tools #####
+
+GetLastBuiltVersion()
+{
+    mkdir -p "${BUILD_SERVER_DIR}/${PROJECT}"
+    cd "${BUILD_SERVER_DIR}/${PROJECT}"
+    BUILD_VER=$(ls 2> /dev/null | sort -V | tail -n1)
+}
+
+GetCurrentVersion()
+{
+    cd "${SOURCES_DIR}/${PROJECT}"
+    CURRENT_VER="unknown-version"
+    if [ -d ".svn" ]
+    then
+        svn up &> /dev/null
+        CURRENT_VER=$(LANG=C svn info 2> /dev/null | sed -ne "s|^Last Changed Rev: \(.*\)|\1|p")
+    elif [ -d ".git" ]
+    then
+        if [ -d ".git/svn" ]
+        then
+            git svn rebase &> /dev/null
+            CURRENT_VER=$(LANG=C git svn info 2> /dev/null | sed -ne "s|^Last Changed Rev: \(.*\)|\1|p")
+        else
+            git pull --all &> /dev/null
+            if git describe --tags &> /dev/null
+            then
+                CURRENT_VER="$(git describe --tags)"
+            else
+                CURRENT_VER=$(date +"%Y-%m-%d_%H-%M-%S")_$(git show -s --pretty=format:%h)
+            fi
+        fi
+    fi
+}
+
+PrepareProjectBuild()
+{
+    export BUILD_DIR="/home/boris/BuildServer/${PROJECT}/${CURRENT_VER}"
+    mkdir "${BUILD_DIR}"
+}
+
+BeginProjectBuild()
+{
+    echo "$(date +"[%Y-%m-%d %H:%M:%S]") build: ${PROJECT}" &>> "${BUILD_SERVER_LOG}"
+}
+
+EndProjectBuild()
+{
+    echo "$(date +"[%Y-%m-%d %H:%M:%S]") done:  ${PROJECT}" &>> "${BUILD_SERVER_LOG}"
+}
+
+IsCmakeProject()
+{
+    [ $(ls "${BUILD_DIR}"/*/CMakeCache.txt 2> /dev/null | wc -l) != "0" ] && \
+        return 0 || \
+        return 1
+}
+
+IsAutotoolsProject()
+{
+    [ $(ls "${BUILD_DIR}"/*/config.status 2> /dev/null | wc -l) != "0" ] && \
+        return 0 || \
+        return 1
+}
+
+InstallQmakeProject()
+{
+    cd "${SOURCES_DIR}/${PROJECT}"
+    build-project clean ${SYSTEMS} &> /dev/null
+
+    cd "${BUILD_DIR}"
+    find "${BUILD_DIR}" -type f \
+        -name '*object_script*' -o \
+        -name '*Makefile*' -o \
+        -name '*.cpp' -o \
+        -name '*.h' | \
+        while read F; do rm -f "${F}"; done
+    find "${BUILD_DIR}" -type f \
+        -name '*.a' | \
+        while read F; do rm -f "${F}"; done
+    find "${BUILD_DIR}" -type d \
+        -name '*android-build*' | \
+        while read F; do rm -rf "${F}"; done
+    find "${BUILD_DIR}" -type f | \
+        grep '.*android_.*\.so' | \
+        while read F; do rm -f "${F}"; done
+    for S in *
+    do
+        find "${BUILD_DIR}/${S}" -type f | \
+            while read F; do mv "${F}" "${S}/" 2> /dev/null; done
+    done
+    find "${BUILD_DIR}" -depth -empty -delete
+}
+
+InstallCmakeProject()
+{
+    cd "${BUILD_DIR}"
+    for S in *
+    do
+        cd "${BUILD_DIR}/${S}"
+        make install DESTDIR="${BUILD_DIR}/${S}-out" -j1 -i -k &> /dev/null
+        cp -af *.log "${BUILD_DIR}/${S}-out" &> /dev/null
+
+        cd "${BUILD_DIR}"
+        rm -rf "${BUILD_DIR}/${S}" &> /dev/null
+        mv "${BUILD_DIR}/${S}-out" "${BUILD_DIR}/${S}" &> /dev/null
+    done
+}
+
+InstallAutotoolsProject()
+{
+    cd "${BUILD_DIR}"
+    for S in *
+    do
+        cd "${BUILD_DIR}/${S}"
+        make install DESTDIR="${BUILD_DIR}/${S}-out" -j1 -i -k &> /dev/null
+        cp -af *.log "${BUILD_DIR}/${S}-out" &> /dev/null
+
+        cd "${BUILD_DIR}"
+        rm -rf "${BUILD_DIR}/${S}" &> /dev/null
+        mv "${BUILD_DIR}/${S}-out" "${BUILD_DIR}/${S}" &> /dev/null
+    done
+}
+
+StartStaticCodeAnalysis()
+{
+    cd "${SOURCES_DIR}/${PROJECT}"
+    LOG_FILE="${BUILD_DIR}/cppcheck.log"
+    cppcheck -q --enable=style -v -f -j1 . &> "${LOG_FILE}" &
+}
+
+##### Script body #####
+
+cd "${SOURCES_DIR}"
+
+for PROJECT in *
+do
+    GetLastBuiltVersion
+    GetCurrentVersion
+
+    if [ "${BUILD_VER}" != "${CURRENT_VER}" ]
+    then
+        PrepareProjectBuild
+        BeginProjectBuild
+
+        cd "${SOURCES_DIR}/${PROJECT}" || exit 1
+        build-project ${SYSTEMS} &> /dev/null
+
+        if IsAutotoolsProject
+        then
+            InstallAutotoolsProject
+        elif IsCmakeProject
+        then
+            InstallCmakeProject
+        else
+            InstallQmakeProject
+        fi
+
+        StartStaticCodeAnalysis
+        EndProjectBuild
+    fi
+done
+

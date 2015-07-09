@@ -1,0 +1,359 @@
+#!/bin/bash
+
+export PROJECT_DIR="$(realpath -s ${PWD})"
+
+##### Setup #####
+
+# Number of compilation processes:
+[ -z "${JOBS}" ] && export JOBS=4
+
+export LXE_DIR="/opt/lxe"
+export MXE_DIR="/opt/mxe"
+
+export QT_MAJOR_VER="5.5"
+export QT_SDK_DIR="/opt/Qt/qt-current/${QT_MAJOR_VER}"
+export ANDROID_SDK_ROOT="/opt/android_sdk/android-sdk-linux"
+export ANDROID_NDK_ROOT="/opt/android_ndk/android-ndk-r10d"
+export ANDROID_NDK_TOOLCHAIN_VERSION="4.9"
+export ANDROID_PLATFORM="android-21"
+export ANT="/usr/bin/ant"
+export JDK="/usr/lib/jvm/java-7-openjdk-amd64"
+
+[ -z "${BUILD_DIR}" ] && \
+    export BUILD_DIR="$(realpath -s "${PROJECT_DIR}/../build")-$(basename "${PROJECT_DIR}")"
+
+# SYSTEMS="Ubuntu-14.04-LTS_i386_static Ubuntu-14.04-LTS_amd64_static"
+# SYSTEMS="Ubuntu-14.04-LTS_i386_shared Ubuntu-14.04-LTS_amd64_shared"
+# SYSTEMS="AstraLinux-1.2_static"
+# SYSTEMS="AstraLinux-1.2_shared AstraLinux-1.3_shared AstraLinux-1.4_shared"
+# SYSTEMS="МСВС-3.0-80001-16_shared"
+# SYSTEMS="МСВС-3.0-80001-12_shared МСВС-3.0-80001-16_shared МСВС-5.0_shared"
+# SYSTEMS="i686-w64-mingw32.static x86_64-w64-mingw32.static"
+# SYSTEMS="android_x86 android_armv7"
+
+SYSTEMS="AstraLinux-1.2_static i686-w64-mingw32.static x86_64-w64-mingw32.static"
+
+##### Do not edit lines below! #####
+
+IsOption()
+{
+    for OPT in clean distclean delete -V --version -h --help
+    do
+        [ "${1}" = "${OPT}" ] && return 0
+    done
+    return 1
+}
+
+export ORIG_PATH="${PATH}"
+if [ ! -z "${1}" ]
+then
+    if ! IsOption "${1}"
+    then
+        export SYSTEMS=${@}
+    elif [ ! -z "${2}" ]
+    then
+        export SYSTEMS=""
+        for N in $(seq 2 $#)
+        do
+            export SYSTEMS="${SYSTEMS} $(eval echo \$${N})"
+        done
+    fi
+fi
+
+##### Help, version, clean up an full clean up #####
+if [ "${1}" = "-h" ] || [ "${1}" = "--help" ]
+then
+    echo \
+"Usage: build-project [option] [system 1] [system 2] [system 3] ...
+
+Program should be launched in project directory!
+
+Options:
+    list            list of all available systems
+    clean           clean up (\`make clean\` for all systems)
+    distclean       full clean up (\`make distclean\` for all systems)
+    delete          delete sub-directories (\`rm -rf\` for all systems)
+    -V, --version   display LXE version and exit
+    -h, --help      display this help and exit
+
+Examples:
+    build-project
+    build-project AstraLinux-1.2_static
+    build-project Ubuntu-14.04-LTS_i386_shared Ubuntu-14.04-LTS_amd64_shared
+    build-project list
+    build-project clean
+    build-project clean AstraLinux-1.2_static i686-w64-mingw32.static
+    build-project distclean
+    build-project distclean x86_64-w64-mingw32.static
+    build-project delete
+    build-project delete android_x86 android_armv7
+
+Settings:
+    Edit this file in Setup section.
+"
+    exit 0
+elif [ "${1}" = "-V" ] || [ "${1}" = "--version" ]
+then
+    echo "LXE version: $(\"${LXE_DIR}/make.sh\" --version)"
+    exit 0
+elif [ "${1}" = "list" ]
+then
+    if cd "${LXE_DIR}/dist" 2> /dev/null
+    then
+        for SYSTEM in *
+        do
+            echo "${SYSTEM}"
+        done
+    fi
+    if cd "${MXE_DIR}/usr" 2> /dev/null
+    then
+        for SYSTEM in *mingw*
+        do
+            echo "${SYSTEM}"
+        done
+    fi
+    if cd "${QT_SDK_DIR}" 2> /dev/null
+    then
+        for SYSTEM in *android*
+        do
+            echo "${SYSTEM}"
+        done
+    fi
+    exit 0
+elif [ "${1}" = "clean" ]
+then
+    for SYSTEM in ${SYSTEMS}
+    do
+        MAKE_FILE="${BUILD_DIR}/${SYSTEM}/Makefile"
+        if [ -e "${MAKE_FILE}" ]
+        then
+            echo "cd \"${BUILD_DIR}/${SYSTEM}\""
+            cd "${BUILD_DIR}/${SYSTEM}"
+            echo "make clean &> /dev/null"
+            make clean &> /dev/null
+        fi
+    done
+    exit 0
+elif [ "${1}" = "distclean" ]
+then
+    for SYSTEM in ${SYSTEMS}
+    do
+        MAKE_FILE="${BUILD_DIR}/${SYSTEM}/Makefile"
+        if [ -e "${MAKE_FILE}" ]
+        then
+            echo "cd \"${BUILD_DIR}/${SYSTEM}\""
+            cd "${BUILD_DIR}/${SYSTEM}"
+            echo "make distclean &> /dev/null"
+            make distclean &> /dev/null
+        fi
+    done
+    exit 0
+elif [ "${1}" = "delete" ]
+then
+    for SYSTEM in ${SYSTEMS}
+    do
+        BUILD_SUB_DIR="${BUILD_DIR}/${SYSTEM}"
+        if [ -d "${BUILD_SUB_DIR}" ]
+        then
+            echo "rm -rf \"${BUILD_SUB_DIR}\""
+            rm -rf "${BUILD_SUB_DIR}"
+        fi
+    done
+    exit 0
+fi
+
+##### Some tools #####
+
+DefinePaths()
+{
+    if [[ "${SYSTEM}" == *mingw* ]]
+    then
+        export SYSTEM_DIR="${MXE_DIR}/usr/${SYSTEM}"
+    elif [[ "${SYSTEM}" == *android* ]]
+    then
+        export SYSTEM_DIR="${QT_SDK_DIR}/${SYSTEM}"
+    else
+        export SYSTEM_DIR="${LXE_DIR}/dist/${SYSTEM}"
+    fi
+    export BUILD_SUB_DIR="${BUILD_DIR}/${SYSTEM}"
+}
+
+CheckSystem()
+{
+    if [ ! -d "${SYSTEM_DIR}" ]
+    then
+        echo "System ${SYSTEM_DIR} does not exist!"
+        continue
+    fi
+}
+
+DetectBuildAutomationSystemType()
+{
+    cd "${PROJECT_DIR}"
+    if [ "$(ls *.pro 2> /dev/null | wc -l)" != "0" ]
+    then
+        export BUILD_SYSTEM_TYPE="qmake"
+        export PROJECT_FILE="${PROJECT_DIR}/$(ls *.pro | head)"
+        return 0
+    elif [ "$(ls CMakeLists.txt 2> /dev/null | wc -l)" != "0" ]
+    then
+        export BUILD_SYSTEM_TYPE="cmake"
+        export PROJECT_FILE="${PROJECT_DIR}/CMakeLists.txt"
+        return 0
+    elif [ "$(grep GNU configure 2> /dev/null | wc -l)" != "0" ]
+    then
+        export BUILD_SYSTEM_TYPE="autotools"
+        export PROJECT_FILE="${PROJECT_DIR}/configure"
+        return 0
+    else
+        echo "Unknown build automation system type!"
+        exit 1
+    fi
+}
+
+BeginBuild()
+{
+    echo "[system]   ${SYSTEM_DIR}"
+    echo "[build]    ${BUILD_SUB_DIR}"
+}
+
+EndBuild()
+{
+    echo "[done]     ${BUILD_SUB_DIR}"
+}
+
+PrepareBuild()
+{
+   case "${BUILD_SYSTEM_TYPE}" in
+    "qmake")
+        if [[ "${SYSTEM}" == *mingw* ]]
+        then
+            export CONFIGURE_TOOL="${SYSTEM_DIR}/qt5/bin/qmake"
+            export CONFIGURE_OPTIONS="-r -spec win32-g++ ${PROJECT_FILE}"
+            export MAKE_TOOL="make"
+            export MAKE_OPTIONS="-j${JOBS} -i -k"
+            export PATH="${MXE_DIR}/usr/bin:${SYSTEM_DIR}/qt5/bin:${ORIG_PATH}"
+        elif [[ "${SYSTEM}" == *android* ]]
+        then
+            export CONFIGURE_TOOL="${SYSTEM_DIR}/bin/qmake"
+            export CONFIGURE_OPTIONS="-r -spec android-g++ ${PROJECT_FILE} ANDROID_NDK_ROOT=${ANDROID_NDK_ROOT}"
+            export MAKE_TOOL="make"
+            export MAKE_OPTIONS="-j${JOBS} -i -k"
+            export PATH="${ORIG_PATH}"
+            export PATH="${ANDROID_SDK_ROOT}/tools:${PATH}"
+            export PATH="${ANDROID_SDK_ROOT}/platform-tools:${PATH}"
+            export PATH="${QT_SDK_DIR}/${SYSTEM}/bin:${PATH}"
+        else
+            export CONFIGURE_TOOL="${SYSTEM_DIR}/sysroot/qt5/bin/qmake"
+            export CONFIGURE_OPTIONS="-r -spec linux-g++-${SYSTEM} ${PROJECT_FILE}"
+            export MAKE_TOOL="make"
+            export MAKE_OPTIONS="-j${JOBS} -i -k"
+            export PATH="${SYSTEM_DIR}/bin:${SYSTEM_DIR}/sysroot/qt5/bin:${ORIG_PATH}"
+        fi
+    ;;
+    "cmake")
+        if [[ "${SYSTEM}" == *mingw* ]]
+        then
+            export CONFIGURE_TOOL="$(which cmake)"
+            local  CMAKE_TOOLCHAIN_FILE="${SYSTEM_DIR}/share/cmake/mxe-conf.cmake"
+            export CONFIGURE_OPTIONS="-DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE} \
+                                      -DCMAKE_INSTALL_PREFIX=/usr \
+                                      ${PROJECT_DIR}"
+            export MAKE_TOOL="make"
+            export MAKE_OPTIONS="-j${JOBS} -i -k"
+            export PATH="${MXE_DIR}/usr/bin:${SYSTEM_DIR}/qt5/bin:${ORIG_PATH}"
+        elif [[ "${SYSTEM}" == *android* ]]
+        then
+            echo "Build of cmake-based projects for Android is not supported yet."
+            continue
+        else
+            export CONFIGURE_TOOL="$(which cmake)"
+            . "${LXE_DIR}/etc/${SYSTEM}.sh"
+            local  CMAKE_TOOLCHAIN_FILE="${SYSTEM_DIR}/sysroot/usr/share/cmake/${SYSTEM}.config.cmake"
+            local  CC=$(ls "${SYSTEM_DIR}/bin/${TARGET}"-gcc-[0-9]* 2> /dev/null | sort -V | tail -n1)
+            local  CXX=$(ls "${SYSTEM_DIR}/bin/${TARGET}"-g++-[0-9]* 2> /dev/null | sort -V | tail -n1)
+            export CONFIGURE_OPTIONS="-DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE} \
+                                      -DCMAKE_INSTALL_PREFIX=/usr \
+                                      -DCMAKE_CXX_COMPILER=${CXX} \
+                                      -DCMAKE_C_COMPILER=${CC} \
+                                      ${PROJECT_DIR}"
+            export MAKE_TOOL="make"
+            export MAKE_OPTIONS="-j${JOBS} -i -k"
+            export PATH="${SYSTEM_DIR}/bin:${SYSTEM_DIR}/sysroot/qt5/bin:${ORIG_PATH}"
+        fi
+    ;;
+    "autotools")
+        if [[ "${SYSTEM}" == *mingw* ]]
+        then
+            export CONFIGURE_TOOL="${PROJECT_FILE}"
+            export CONFIGURE_OPTIONS="--target=${SYSTEM} --host=${SYSTEM} --prefix=/usr"
+            export MAKE_TOOL="make"
+            export MAKE_OPTIONS="-j${JOBS} -i -k"
+            export PATH="${MXE_DIR}/usr/bin:${SYSTEM_DIR}/qt5/bin:${ORIG_PATH}"
+        elif [[ "${SYSTEM}" == *android* ]]
+        then
+            echo "Build of autotools-based projects for Android is not supported yet."
+            continue
+        else
+            export CONFIGURE_TOOL="${PROJECT_FILE}"
+            . "${LXE_DIR}/etc/${SYSTEM}.sh"
+            export CONFIGURE_OPTIONS="--target=${TARGET} --host=${TARGET} --prefix=/usr"
+            export MAKE_TOOL="make"
+            export MAKE_OPTIONS="-j${JOBS} -i -k"
+            export PATH="${SYSTEM_DIR}/bin:${SYSTEM_DIR}/sysroot/qt5/bin:${ORIG_PATH}"
+        fi
+    ;;
+    esac
+}
+
+BuildProject()
+{
+    local LOG_FILE="${BUILD_SUB_DIR}/build.log"
+    rm -rf "${LOG_FILE}"
+
+    mkdir -p "${BUILD_SUB_DIR}"
+    cd "${BUILD_SUB_DIR}" || exit 1
+
+    "${CONFIGURE_TOOL}" ${CONFIGURE_OPTIONS} &>> "${LOG_FILE}"
+    "${MAKE_TOOL}" ${MAKE_OPTIONS} &>> "${LOG_FILE}"
+
+    if [[ "${SYSTEM}" == *android* ]]
+    then
+        "${MAKE_TOOL}" INSTALL_ROOT="${BUILD_SUB_DIR}/android-build" install &>> "${LOG_FILE}"
+
+        SETTINGS_FILE="$(find ${BUILD_SUB_DIR} -type f -name '*.so-deployment-settings.json' | head -n1)"
+        androiddeployqt \
+            --input "${SETTINGS_FILE}" \
+            --output "${BUILD_SUB_DIR}/android-build" \
+            --deployment bundled \
+            --android-platform "${ANDROID_PLATFORM}" \
+            --jdk "${JDK}" \
+            --ant "${ANT}" \
+            --sign foo bar \
+            --storepass '123456' \
+            &>> "${LOG_FILE}"
+        #    --sign 'example' \
+        #    --storepass '123456' \
+
+        APP_FILE_NAME=QtApp-release-unsigned.apk
+        # APP_FILE_NAME=QtApp-debug-unaligned.apk
+        cp -af "${BUILD_SUB_DIR}/android-build/bin/${APP_FILE_NAME}" \
+               "${BUILD_SUB_DIR}/$(basename ${PROJECT_DIR})_${SYSTEM:8}_${ANDROID_PLATFORM}.apk" \
+               &>> "${LOG_FILE}"
+    fi
+}
+
+# Build project using specified systems
+
+for SYSTEM in ${SYSTEMS}
+do
+    DefinePaths
+    CheckSystem
+
+    DetectBuildAutomationSystemType
+    PrepareBuild
+    BeginBuild
+    BuildProject
+    EndBuild
+done
+

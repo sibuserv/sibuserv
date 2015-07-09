@@ -1,0 +1,13 @@
+#!/bin/bash
+
+SCRIPT_NAME="$(basename ${0})"
+SCRIPT_PID="$(pidof -o %PPID -x ${SCRIPT_NAME})"
+
+[ ! -z "${SCRIPT_PID}" ] && exit 0
+
+while [ 1 ]
+do
+    build-supervisor
+    sleep 5m
+done
+

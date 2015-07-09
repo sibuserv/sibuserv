@@ -1,0 +1,56 @@
+Sibuserv -- Simple Build Server
+
+Copyright: 2015 Boris Pek <tehnick-8@mail.ru>
+License: Expat
+
+Homepage: https://github.com/tehnick/sibuserv
+
+Description:
+This project includes collection of tools which allows to setup simple build
+server based on cross-compilation for target systems. This server will be able
+to follow changes in specified svn, git-svn and/or git-repositories and to make
+builds of your qmake-, cmake- and/or autotools-based projects for each commit. 
+
+Currently supported target systems:
+* different GNU/Linux systems (tested for i486, i586, amd64 and armhf)
+* MS Windows (i686 and x86_64)
+* Android (ARMv5, ARMv7 and x86)
+And maybe one day Sibuserv will be able to build C++ apps for OS X too.
+
+This project is not self-contained, it depends on few other projects:
+* LXE -- Linux cross-toolchain environment
+* MXE -- M cross environment (for MS Windows)
+* official Android SDK and NDK
+* official Qt SDK (for Android)
+
+Dependencies:
+bash, realpath, pkg-config, make, cmake, patch, sed, find, cppcheck
+
+Examples of usage (program should be launched in project directory):
+  build-project
+  build-project AstraLinux-1.2_static
+  build-project Ubuntu-14.04-LTS_i386_shared Ubuntu-14.04-LTS_amd64_shared
+  build-project list
+  build-project clean
+  build-project clean AstraLinux-1.2_static i686-w64-mingw32.static
+  build-project distclean
+  build-project distclean x86_64-w64-mingw32.static
+  build-project delete
+  build-project delete android_x86 android_armv7
+  build-project --version
+  build-project --help
+
+Other tools (may be launched from any directory):
+  build-supervisor
+  build-server-daemon &
+
+Useful links:
+  https://github.com/tehnick/lxe
+  https://github.com/tehnick/mxe
+  http://mxe.cc/
+
+Important notes:
+If you want to distribute statically linked binaries, you have to check the
+license compatibility very carefully. Even if your projects are free and/or
+open-source software.
+
