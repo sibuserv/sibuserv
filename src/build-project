@@ -329,14 +329,13 @@ BuildProject()
             --android-platform "${ANDROID_PLATFORM}" \
             --jdk "${JDK}" \
             --ant "${ANT}" \
-            --sign foo bar \
-            --storepass '123456' \
             &>> "${LOG_FILE}"
+        #    --sign foo bar \
         #    --sign 'example' \
         #    --storepass '123456' \
 
-        APP_FILE_NAME=QtApp-release-unsigned.apk
-        # APP_FILE_NAME=QtApp-debug-unaligned.apk
+        # APP_FILE_NAME=QtApp-release-unsigned.apk
+        APP_FILE_NAME=QtApp-debug-unaligned.apk
         cp -af "${BUILD_SUB_DIR}/android-build/bin/${APP_FILE_NAME}" \
                "${BUILD_SUB_DIR}/$(basename ${PROJECT_DIR})_${SYSTEM:8}_${ANDROID_PLATFORM}.apk" \
                &>> "${LOG_FILE}"
