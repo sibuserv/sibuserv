@@ -76,12 +76,12 @@ PrepareProjectBuild()
 
 BeginProjectBuild()
 {
-    echo "$(date +"[%Y-%m-%d %H:%M:%S]") build: ${PROJECT}" &>> "${BUILD_SERVER_LOG}"
+    echo "$(date +"[%Y-%m-%d %H:%M:%S]") build: ${PROJECT}: ${CURRENT_VER}" &>> "${BUILD_SERVER_LOG}"
 }
 
 EndProjectBuild()
 {
-    echo "$(date +"[%Y-%m-%d %H:%M:%S]") done:  ${PROJECT}" &>> "${BUILD_SERVER_LOG}"
+    echo "$(date +"[%Y-%m-%d %H:%M:%S]") done:  ${PROJECT}: ${CURRENT_VER}" &>> "${BUILD_SERVER_LOG}"
 }
 
 IsCmakeProject()
