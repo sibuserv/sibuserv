@@ -1,0 +1,12 @@
+[Unit]
+Description=Simple Build Server Daemon
+After=network.target
+
+[Service]
+User=sibuserv
+Type=simple
+ExecStart=/usr/bin/build-server-daemon
+ExecReload=/bin/kill -s HUP $MAINPID
+
+[Install]
+WantedBy=multi-user.target
