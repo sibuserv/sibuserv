@@ -8,6 +8,7 @@
 * Write more details into log file.
 *** build-project ***
 * Update QT_MAJOR_VER from 5.5 to 5.6.
+* Update default Android NDK version from r10d to r10e.
 * Update path to OpenJDK from 1.7.x to 1.8.x.
 
 --- v0.8 (2015-07-10) ---
