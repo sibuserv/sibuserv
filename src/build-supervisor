@@ -27,6 +27,8 @@ export BUILD_SERVER_LOG="${BUILD_SERVER_DIR}/build-server-daemon.log"
 
 SYSTEMS="i686-w64-mingw32.static
          x86_64-w64-mingw32.static
+         AstraLinux-1.4_static
+         AstraLinux-1.3_static
          AstraLinux-1.2_static
          Ubuntu-14.04-LTS_i386_static
          android_x86
