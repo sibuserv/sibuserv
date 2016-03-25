@@ -13,7 +13,9 @@ export BUILD_SERVER_LOG="${BUILD_SERVER_DIR}/build-server-daemon.log"
 # AstraLinux-1.2_shared
 # AstraLinux-1.2_static
 # AstraLinux-1.3_shared
+# AstraLinux-1.3_static
 # AstraLinux-1.4_shared
+# AstraLinux-1.4_static
 # Ubuntu-14.04-LTS_amd64_shared
 # Ubuntu-14.04-LTS_amd64_static
 # Ubuntu-14.04-LTS_i386_shared
