@@ -4,13 +4,9 @@ ANDROID_SDK_FILE = android-sdk_r24.3.3-linux.tgz
 
 ifeq ($(shell uname -m), x86_64)
 	ANDROID_NDK_FILE = android-ndk-r10e-linux-x86_64.bin
-else
-	ANDROID_NDK_FILE = android-ndk-r10e-linux-x86.bin
-endif
-
-ifeq ($(shell uname -m), x86_64)
 	QTSDK_FILE = qt-unified-linux-x64-online.run
 else
+	ANDROID_NDK_FILE = android-ndk-r10e-linux-x86.bin
 	QTSDK_FILE = qt-unified-linux-x86-online.run
 endif
 
