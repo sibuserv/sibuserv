@@ -37,12 +37,6 @@ download:
 	chmod uog+x $(CURDIR)/opt/$(QTSDK_FILE) \
 		$(CURDIR)/opt/$(ANDROID_NDK_FILE)
 
-link:
-	mkdir -p $(DESTDIR)/bin
-	ln -sf $(CURDIR)/src/build-project       $(DESTDIR)/bin/
-	ln -sf $(CURDIR)/src/build-server-daemon $(DESTDIR)/bin/
-	ln -sf $(CURDIR)/src/build-supervisor    $(DESTDIR)/bin/
-
 install:
 	mkdir -p $(DESTDIR)/bin
 	cp -af src/build-project $(DESTDIR)/bin/
