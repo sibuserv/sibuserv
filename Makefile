@@ -1,6 +1,6 @@
 DESTDIR = /usr
 
-ANDROID_SDK_FILE = android-sdk_r24.3.3-linux.tgz
+ANDROID_SDK_FILE = android-sdk_r24.4.1-linux.tgz
 
 ifeq ($(shell uname -m), x86_64)
 	ANDROID_NDK_FILE = android-ndk-r10e-linux-x86_64.bin
@@ -10,12 +10,12 @@ else
 	QTSDK_FILE = qt-unified-linux-x86-online.run
 endif
 
-# http://developer.android.com/sdk/index.html#Other
-# http://developer.android.com/ndk/downloads/index.html
+# https://developer.android.com/sdk/index.html#Other
+# https://developer.android.com/ndk/downloads/index.html
 
-QTSDK_URL       = http://download.qt.io/official_releases/online_installers/
-ANDROID_SDK_URL = http://dl.google.com/android
-ANDROID_NDK_URL = http://dl.google.com/android/ndk
+QTSDK_URL       = https://download.qt.io/official_releases/online_installers/
+ANDROID_SDK_URL = https://dl.google.com/android
+ANDROID_NDK_URL = https://dl.google.com/android/ndk
 
 
 download:
