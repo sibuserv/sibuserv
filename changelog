@@ -1,4 +1,4 @@
---- v0.9 (2015-08-xx) ---
+--- v0.9 (2016-03-xx) ---
 * Add download goal into Makefile.
 * Add sample of systemd service file.
 
