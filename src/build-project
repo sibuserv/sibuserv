@@ -17,7 +17,7 @@ export ANDROID_NDK_ROOT="/opt/android_ndk/android-ndk-r10d"
 export ANDROID_NDK_TOOLCHAIN_VERSION="4.9"
 export ANDROID_PLATFORM="android-21"
 export ANT="/usr/bin/ant"
-export JDK="/usr/lib/jvm/java-7-openjdk-amd64"
+export JDK="/usr/lib/jvm/java-8-openjdk-amd64"
 
 [ -z "${BUILD_DIR}" ] && \
     export BUILD_DIR="$(realpath -s "${PROJECT_DIR}/../build")-$(basename "${PROJECT_DIR}")"
