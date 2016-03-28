@@ -163,7 +163,7 @@ StartStaticCodeAnalysis()
 
 ##### Script body #####
 
-cd "${SOURCES_DIR}"
+cd "${SOURCES_DIR}" || exit 1
 
 for PROJECT in *
 do

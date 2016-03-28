@@ -6,6 +6,7 @@
 * Remove 'link' target from Makefile.
 *** build-supervisor ***
 * Write more details into log file.
+* Check the existence of SOURCES_DIR.
 * Add support of system and user configs:
   - /etc/sibuserv/sibuserv.conf
   - ~/.config/sibuserv/sibuserv.conf
