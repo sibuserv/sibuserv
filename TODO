@@ -2,7 +2,4 @@
 * Add support of projects stored in mercurial repos.
 * Add support of build of cmake-based projects for Android.
 * Add support of build of autotools-based projects for Android.
-* Add support of system and user configs:
-  - /etc/sibuserv/sibuserv.conf
-  - ~/.config/sibuserv/sibuserv.conf
 ? Add support of build for OS X.

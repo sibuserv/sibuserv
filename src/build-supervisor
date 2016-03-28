@@ -1,41 +1,34 @@
 #!/bin/bash
 
-##### Setup #####
+# User configuration file: ~/.config/sibuserv/sibuserv.conf
+# System configuration file: /etc/sibuserv/sibuserv.conf
+
+##### Default settings #####
 
 # Number of compilation processes:
-export JOBS=3
+[ -z "${JOBS}" ] && export JOBS=4
 
-export SOURCES_DIR="${HOME}/BuildServerSVN"
-export BUILD_SERVER_DIR="${HOME}/BuildServer"
+export SOURCES_DIR="${HOME}/BuildServer/Sources"
+export BUILD_SERVER_DIR="${HOME}/BuildServer/Binaries"
 export BUILD_SERVER_LOG="${BUILD_SERVER_DIR}/build-server-daemon.log"
-
-# $ build-project list
-# AstraLinux-1.2_shared
-# AstraLinux-1.2_static
-# AstraLinux-1.3_shared
-# AstraLinux-1.3_static
-# AstraLinux-1.4_shared
-# AstraLinux-1.4_static
-# Ubuntu-14.04-LTS_amd64_shared
-# Ubuntu-14.04-LTS_amd64_static
-# Ubuntu-14.04-LTS_i386_shared
-# Ubuntu-14.04-LTS_i386_static
-# i686-w64-mingw32.static
-# x86_64-w64-mingw32.static
-# android_armv7
-# android_x86
 
 SYSTEMS="i686-w64-mingw32.static
          x86_64-w64-mingw32.static
-         AstraLinux-1.4_static
-         AstraLinux-1.3_static
-         AstraLinux-1.2_static
          Ubuntu-14.04-LTS_i386_static
+         Ubuntu-14.04-LTS_amd64_static
          android_x86
          android_armv7"
 
 
 ##### Do not edit lines below! #####
+
+##### Load settings from configuration file if it exists #####
+
+for CONF_FILE in "/etc/sibuserv/sibuserv.conf" \
+                 "${HOME}/.config/sibuserv/sibuserv.conf"
+do
+    [ -e "${CONF_FILE}" ] && . "${CONF_FILE}"
+done
 
 ##### Some tools #####
 

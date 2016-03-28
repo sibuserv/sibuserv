@@ -2,7 +2,10 @@
 
 export PROJECT_DIR="$(realpath -s ${PWD})"
 
-##### Setup #####
+[ -z "${BUILD_DIR}" ] && \
+    export BUILD_DIR="$(realpath -s "${PROJECT_DIR}/../build")-$(basename "${PROJECT_DIR}")"
+
+##### Default settings #####
 
 # Number of compilation processes:
 [ -z "${JOBS}" ] && export JOBS=4
@@ -12,28 +15,36 @@ export MXE_DIR="/opt/mxe"
 
 export QT_MAJOR_VER="5.6"
 export QT_SDK_DIR="/opt/Qt/qt-current/${QT_MAJOR_VER}"
+
 export ANDROID_SDK_ROOT="/opt/android_sdk/android-sdk-linux"
 export ANDROID_NDK_ROOT="/opt/android_ndk/android-ndk-r10e"
 export ANDROID_NDK_TOOLCHAIN_VERSION="4.9"
 export ANDROID_PLATFORM="android-21"
+
+export JDK="$(ls -d /usr/lib/jvm/java-*-openjdk-* | sort | tail -n1)"
 export ANT="/usr/bin/ant"
-export JDK="/usr/lib/jvm/java-8-openjdk-amd64"
 
-[ -z "${BUILD_DIR}" ] && \
-    export BUILD_DIR="$(realpath -s "${PROJECT_DIR}/../build")-$(basename "${PROJECT_DIR}")"
-
-# SYSTEMS="Ubuntu-14.04-LTS_i386_static Ubuntu-14.04-LTS_amd64_static"
-# SYSTEMS="Ubuntu-14.04-LTS_i386_shared Ubuntu-14.04-LTS_amd64_shared"
-# SYSTEMS="AstraLinux-1.2_static"
-# SYSTEMS="AstraLinux-1.2_shared AstraLinux-1.3_shared AstraLinux-1.4_shared"
-# SYSTEMS="МСВС-3.0-80001-16_shared"
-# SYSTEMS="МСВС-3.0-80001-12_shared МСВС-3.0-80001-16_shared МСВС-5.0_shared"
-# SYSTEMS="i686-w64-mingw32.static x86_64-w64-mingw32.static"
-# SYSTEMS="android_x86 android_armv7"
-
-SYSTEMS="AstraLinux-1.2_static i686-w64-mingw32.static x86_64-w64-mingw32.static"
+if [ -z "${SYSTEMS}" ]
+then
+    SYSTEMS="${SYSTEMS} i686-w64-mingw32.static x86_64-w64-mingw32.static"
+    SYSTEMS="${SYSTEMS} Ubuntu-14.04-LTS_i386_static Ubuntu-14.04-LTS_amd64_static"
+    # SYSTEMS="${SYSTEMS} Ubuntu-14.04-LTS_i386_shared Ubuntu-14.04-LTS_amd64_shared"
+    # SYSTEMS="${SYSTEMS} AstraLinux-1.2_static AstraLinux-1.3_static AstraLinux-1.4_static"
+    # SYSTEMS="${SYSTEMS} AstraLinux-1.2_shared AstraLinux-1.3_shared AstraLinux-1.4_shared"
+    SYSTEMS="${SYSTEMS} android_x86 android_armv7"
+fi
 
 ##### Do not edit lines below! #####
+
+##### Load settings from configuration file if it exists #####
+
+for CONF_FILE in "/etc/sibuserv/sibuserv.conf" \
+                 "${HOME}/.config/sibuserv/sibuserv.conf"
+do
+    [ -e "${CONF_FILE}" ] && . "${CONF_FILE}"
+done
+
+##### Some tools #####
 
 IsOption()
 {
@@ -43,6 +54,8 @@ IsOption()
     done
     return 1
 }
+
+##### Determining the list of target systems #####
 
 export ORIG_PATH="${PATH}"
 if [ ! -z "${1}" ]
@@ -69,7 +82,7 @@ then
 Program should be launched in project directory!
 
 Options:
-    list            list of all available systems
+    list            list of all available target systems
     clean           clean up (\`make clean\` for all systems)
     distclean       full clean up (\`make distclean\` for all systems)
     delete          delete sub-directories (\`rm -rf\` for all systems)
@@ -89,7 +102,9 @@ Examples:
     build-project delete android_x86 android_armv7
 
 Settings:
-    Edit this file in Setup section.
+    1) Default settings in the beginning of this file.
+    2) System configuration file: /etc/sibuserv/sibuserv.conf
+    3) User configuration file: ~/.config/sibuserv/sibuserv.conf
 "
     exit 0
 elif [ "${1}" = "-V" ] || [ "${1}" = "--version" ]

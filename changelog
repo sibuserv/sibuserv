@@ -1,15 +1,23 @@
 --- v0.9 (2016-03-xx) ---
 *** common ***
 * Add sample of systemd service file.
+* Add sample of sibuserv config.
 * Add 'download' target into Makefile.
 * Remove 'link' target from Makefile.
 *** build-supervisor ***
-* Update default settings.
 * Write more details into log file.
+* Add support of system and user configs:
+  - /etc/sibuserv/sibuserv.conf
+  - ~/.config/sibuserv/sibuserv.conf
+* Update default settings.
 *** build-project ***
 * Update QT_MAJOR_VER from 5.5 to 5.6.
 * Update default Android NDK version from r10d to r10e.
 * Update path to OpenJDK from 1.7.x to 1.8.x.
+* Add support of system and user configs:
+  - /etc/sibuserv/sibuserv.conf
+  - ~/.config/sibuserv/sibuserv.conf
+* Update default settings.
 
 --- v0.8 (2015-07-10) ---
 * First public release.
