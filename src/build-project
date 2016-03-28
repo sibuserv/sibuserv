@@ -41,7 +41,7 @@ fi
 for CONF_FILE in "/etc/sibuserv/sibuserv.conf" \
                  "${HOME}/.config/sibuserv/sibuserv.conf"
 do
-    [ -e "${CONF_FILE}" ] && . "${CONF_FILE}"
+    [ -r "${CONF_FILE}" ] && . "${CONF_FILE}"
 done
 
 ##### Some tools #####
