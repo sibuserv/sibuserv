@@ -1,4 +1,6 @@
 --- TODO ---
+* Add ability of a build for a number of android platforms defined in SYSTEMS
+  variable by its name: android-<Android API level>-<target architecture>.
 * Add support of projects stored in mercurial repos.
 * Add support of build of cmake-based projects for Android.
 * Add support of build of autotools-based projects for Android.
