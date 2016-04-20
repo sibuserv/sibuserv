@@ -1,6 +1,14 @@
 --- v1.0 (2016-xx-xx) ---
+*** common ***
+* Update sample of sibuserv config.
 *** build-supervisor ***
 * Use cppcheck for static code analysis only when it is available.
+* Move cppcheck logs into StaticCodeAnalysis subdirectory.
+* Add options:
+  - ENABLE_STATIC_CODE_ANALYSIS
+  - ENABLE_CPPCHECK_LOG
+  - ENABLE_CPPCHECK_XML
+  - ENABLE_CPPCHECK_HTML
 
 --- v0.9 (2016-03-28) ---
 *** common ***
