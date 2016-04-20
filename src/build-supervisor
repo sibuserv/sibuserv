@@ -175,20 +175,22 @@ StartStaticCodeAnalysis()
     then
         LOG_FILE="${STATIC_CODE_ANALYSIS_LOGS_DIR}/cppcheck.log"
         cppcheck -q --enable=style -v -f -j${JOBS} . &> "${LOG_FILE}"
+        STAT_FILE="${STATIC_CODE_ANALYSIS_LOGS_DIR}/cppcheck.stats.txt"
+        grep ': (' "${LOG_FILE}" | tr '()' '*' | cut -d* -f2 | sort | uniq -c &> "${STAT_FILE}"
     fi
     if [ "${ENABLE_CPPCHECK_XML}" = "true" ] && \
        [ $(which cppcheck | wc -l) = "1" ]
     then
-        LOG_FILE="${STATIC_CODE_ANALYSIS_LOGS_DIR}/cppcheck.xml"
-        cppcheck -q --enable=style -v -f -j${JOBS} --xml . &> "${LOG_FILE}"
+        XML_FILE="${STATIC_CODE_ANALYSIS_LOGS_DIR}/cppcheck.xml"
+        cppcheck -q --enable=style -v -f -j${JOBS} --xml . &> "${XML_FILE}"
     fi
     if [ "${ENABLE_CPPCHECK_HTML}" = "true" ] && \
        [ "${ENABLE_CPPCHECK_XML}"  = "true" ] && \
        [ $(which cppcheck-htmlreport | wc -l) = "1" ] && \
-       [ -r "${LOG_FILE}" ]
+       [ -r "${XML_FILE}" ]
     then
         HTML_DIR="${STATIC_CODE_ANALYSIS_LOGS_DIR}/cppcheck.html"
-        cppcheck-htmlreport --source-dir=. --report-dir="${HTML_DIR}" --file="${LOG_FILE}" \
+        cppcheck-htmlreport --source-dir=. --report-dir="${HTML_DIR}" --file="${XML_FILE}" \
                             &> "${STATIC_CODE_ANALYSIS_LOGS_DIR}/cppcheck.html.log"
     fi
 }
