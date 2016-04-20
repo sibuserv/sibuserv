@@ -12,6 +12,7 @@ export SOURCES_DIR="${HOME}/BuildServer/Sources"
 export BUILD_SERVER_DIR="${HOME}/BuildServer/Binaries"
 export BUILD_SERVER_LOG="${BUILD_SERVER_DIR}/build-server-daemon.log"
 
+export STATIC_CODE_ANALYSIS_LOGS_SUBDIR="StaticCodeAnalysis"
 export ENABLE_STATIC_CODE_ANALYSIS="true"
 export ENABLE_CPPCHECK_LOG="true"
 export ENABLE_CPPCHECK_XML="true"
@@ -123,6 +124,8 @@ InstallQmakeProject()
         while read F; do rm -f "${F}"; done
     for S in *
     do
+        [ "${S}" == "${STATIC_CODE_ANALYSIS_LOGS_SUBDIR}" ] && continue || true
+
         find "${BUILD_DIR}/${S}" -type f | \
             while read F; do mv "${F}" "${S}/" 2> /dev/null; done
     done
@@ -134,6 +137,8 @@ InstallCmakeProject()
     cd "${BUILD_DIR}"
     for S in *
     do
+        [ "${S}" == "${STATIC_CODE_ANALYSIS_LOGS_SUBDIR}" ] && continue || true
+
         cd "${BUILD_DIR}/${S}"
         make install DESTDIR="${BUILD_DIR}/${S}-out" -j1 -i -k &> /dev/null
         cp -af *.log "${BUILD_DIR}/${S}-out" &> /dev/null
@@ -149,6 +154,8 @@ InstallAutotoolsProject()
     cd "${BUILD_DIR}"
     for S in *
     do
+        [ "${S}" == "${STATIC_CODE_ANALYSIS_LOGS_SUBDIR}" ] && continue || true
+
         cd "${BUILD_DIR}/${S}"
         make install DESTDIR="${BUILD_DIR}/${S}-out" -j1 -i -k &> /dev/null
         cp -af *.log "${BUILD_DIR}/${S}-out" &> /dev/null
@@ -167,7 +174,7 @@ StartStaticCodeAnalysis()
         return 0
     fi
 
-    STATIC_CODE_ANALYSIS_LOGS_DIR="${BUILD_DIR}/StaticCodeAnalysis"
+    STATIC_CODE_ANALYSIS_LOGS_DIR="${BUILD_DIR}/${STATIC_CODE_ANALYSIS_LOGS_SUBDIR}"
     mkdir -p "${STATIC_CODE_ANALYSIS_LOGS_DIR}"
 
     if [ "${ENABLE_CPPCHECK_LOG}" = "true" ] && \

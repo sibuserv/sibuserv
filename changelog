@@ -5,6 +5,7 @@
 * Use cppcheck for static code analysis only when it is available.
 * Move cppcheck logs into StaticCodeAnalysis subdirectory.
 * Add options:
+  - STATIC_CODE_ANALYSIS_LOGS_SUBDIR
   - ENABLE_STATIC_CODE_ANALYSIS
   - ENABLE_CPPCHECK_LOG
   - ENABLE_CPPCHECK_XML
