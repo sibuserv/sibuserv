@@ -1,3 +1,7 @@
+--- v1.0 (2016-xx-xx) ---
+*** build-supervisor ***
+* Use cppcheck for static code analysis only when it is available.
+
 --- v0.9 (2016-03-28) ---
 *** common ***
 * Add sample of systemd service file.

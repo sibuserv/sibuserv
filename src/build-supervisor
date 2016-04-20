@@ -157,8 +157,12 @@ InstallAutotoolsProject()
 StartStaticCodeAnalysis()
 {
     cd "${SOURCES_DIR}/${PROJECT}"
-    LOG_FILE="${BUILD_DIR}/cppcheck.log"
-    cppcheck -q --enable=style -v -f -j1 . &> "${LOG_FILE}" &
+
+    if [ $(which cppcheck | wc -l) != "0" ]
+    then
+        LOG_FILE="${BUILD_DIR}/cppcheck.log"
+        cppcheck -q --enable=style -v -f -j1 . &> "${LOG_FILE}" &
+    fi
 }
 
 ##### Script body #####
