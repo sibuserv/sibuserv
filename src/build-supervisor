@@ -17,6 +17,7 @@ export ENABLE_STATIC_CODE_ANALYSIS="true"
 export ENABLE_CPPCHECK_LOG="true"
 export ENABLE_CPPCHECK_XML="true"
 export ENABLE_CPPCHECK_HTML="true"
+export CPPCHECK_OPTIONS="-v -f -j${JOBS} --enable=style --suppress=variableScope"
 
 SYSTEMS="i686-w64-mingw32.static
          x86_64-w64-mingw32.static
@@ -181,7 +182,7 @@ StartStaticCodeAnalysis()
        [ $(which cppcheck | wc -l) = "1" ]
     then
         LOG_FILE="${STATIC_CODE_ANALYSIS_LOGS_DIR}/cppcheck.log"
-        cppcheck -q --enable=style -v -f -j${JOBS} . &> "${LOG_FILE}"
+        cppcheck -q ${CPPCHECK_OPTIONS} . &> "${LOG_FILE}"
         STAT_FILE="${STATIC_CODE_ANALYSIS_LOGS_DIR}/cppcheck.stats.txt"
         grep ': (' "${LOG_FILE}" | tr '()' '*' | cut -d* -f2 | sort | uniq -c &> "${STAT_FILE}"
     fi
@@ -189,7 +190,7 @@ StartStaticCodeAnalysis()
        [ $(which cppcheck | wc -l) = "1" ]
     then
         XML_FILE="${STATIC_CODE_ANALYSIS_LOGS_DIR}/cppcheck.xml"
-        cppcheck -q --enable=style -v -f -j${JOBS} --xml . &> "${XML_FILE}"
+        cppcheck -q ${CPPCHECK_OPTIONS} --xml . &> "${XML_FILE}"
     fi
     if [ "${ENABLE_CPPCHECK_HTML}" = "true" ] && \
        [ "${ENABLE_CPPCHECK_XML}"  = "true" ] && \
