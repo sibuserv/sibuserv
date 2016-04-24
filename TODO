@@ -1,4 +1,6 @@
 --- TODO ---
+* Add support of spec scripts which will allow users to configure, build and
+  install projects in a user defined way.
 * Add ability of a build for a number of android platforms defined in SYSTEMS
   variable by its name: android-<Android API level>-<target architecture>.
 * Add support of projects stored in mercurial repos.
