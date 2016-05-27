@@ -307,8 +307,49 @@ PrepareBuild()
             export PATH="${MXE_DIR}/usr/bin:${SYSTEM_DIR}/qt5/bin:${ORIG_PATH}"
         elif [[ "${SYSTEM}" == *android* ]]
         then
-            echo "Build of autotools-based projects for Android is not supported yet."
-            continue
+            export CONFIGURE_TOOL="${PROJECT_FILE}"
+            export ARCH="$(echo ${SYSTEM} | sed -ne 's|^android_\(.*\)|\1|p')"
+            [ "${ARCH}" = "armv7" ] && export ARCH="arm" || true
+            # target
+            if [ "${ARCH}" = "arm" ] ; then
+                export TARGET="arm-linux-androideabi"
+            elif [ "${ARCH}" = "arm64" ] ; then
+                export TARGET="aarch64-linux-android"
+            elif [ "${ARCH}" = "mips" ] ; then
+                export TARGET="mipsel-linux-android"
+            elif [ "${ARCH}" = "mips64" ] ; then
+                export TARGET="mips64el-linux-android"
+            elif [ "${ARCH}" = "x86" ] ; then
+                export TARGET="i686-linux-android"
+            elif [ "${ARCH}" = "x86_64" ] ; then
+                export TARGET="x86_64-linux-android"
+            else
+                export TARGET="${ARCH}"
+            fi
+            # dirty fix because of irrational Android NDK developers
+            if [ "${ARCH}" = "x86" ]
+            then
+                export TARGET_SPECIAL_NAME="x86"
+            elif [ "${ARCH}" = "x86_64" ]
+            then
+                export TARGET_SPECIAL_NAME="x86_64"
+            else
+                export TARGET_SPECIAL_NAME="${TARGET}"
+            fi
+            #
+            export ANDROID_SYSROOT="${ANDROID_NDK_ROOT}/platforms/${ANDROID_PLATFORM}/arch-${ARCH}"
+            export CPPFLAGS="--sysroot=${ANDROID_SYSROOT}"
+            export CXXFLAGS="--sysroot=${ANDROID_SYSROOT}"
+            export CFLAGS="--sysroot=${ANDROID_SYSROOT}"
+            export CONFIGURE_OPTIONS="--target=${TARGET} --host=${TARGET} --with-sysroot=${ANDROID_SYSROOT} --prefix=/usr"
+            export MAKE_TOOL="make"
+            export MAKE_OPTIONS="-j${JOBS} -i -k"
+            export PATH="${ORIG_PATH}"
+            export PATH="${ANDROID_SDK_ROOT}/tools:${PATH}"
+            export PATH="${ANDROID_SDK_ROOT}/platform-tools:${PATH}"
+            export PATH="${ANDROID_NDK_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin:${PATH}"
+            export PATH="${ANDROID_NDK_ROOT}/toolchains/${TARGET_SPECIAL_NAME}-${ANDROID_NDK_TOOLCHAIN_VERSION}/prebuilt/linux-x86_64/bin:${PATH}"
+            export PATH="${QT_SDK_DIR}/${SYSTEM}/bin:${PATH}"
         else
             export CONFIGURE_TOOL="${PROJECT_FILE}"
             . "${LXE_DIR}/etc/${SYSTEM}.sh"

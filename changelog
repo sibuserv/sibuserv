@@ -18,6 +18,8 @@
   - ENABLE_CPPCHECK_HTML
   - CPPCHECK_OPTIONS
 * Tiny fix in processing projects algorithm.
+*** build-project ***
+* Add support of build of autotools-based projects for Android.
 
 --- v0.9 (2016-03-28) ---
 *** common ***
