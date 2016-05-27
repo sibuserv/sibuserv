@@ -6,6 +6,7 @@
   systems.)
 * Add separate qt-opensource-linux-x64-android-$(QT_VERSION).run file to
   download target.
+* Update Android NDK version from r10e to r11c.
 *** build-supervisor ***
 * Use cppcheck for static code analysis only when it is available.
 * Move cppcheck logs into StaticCodeAnalysis subdirectory.
