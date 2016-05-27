@@ -75,7 +75,12 @@ GetCurrentVersion()
 PrepareProjectBuild()
 {
     export BUILD_DIR="/home/boris/BuildServer/${PROJECT}/${CURRENT_VER}"
-    mkdir "${BUILD_DIR}"
+    if [ ! -d "${BUILD_DIR}" ]
+    then
+        mkdir "${BUILD_DIR}"
+    else
+        return 1
+    fi
 }
 
 BeginProjectBuild()
@@ -214,7 +219,7 @@ do
 
     if [ "${BUILD_VER}" != "${CURRENT_VER}" ]
     then
-        PrepareProjectBuild
+        PrepareProjectBuild || continue
         BeginProjectBuild
 
         cd "${SOURCES_DIR}/${PROJECT}" || exit 1
