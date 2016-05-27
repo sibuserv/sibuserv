@@ -14,7 +14,7 @@ builds of your qmake-, cmake- and/or autotools-based projects for each commit.
 Currently supported target systems:
 * different GNU/Linux systems (tested for i486, i586, amd64 and armhf)
 * MS Windows (i686 and x86_64)
-* Android (ARMv5, ARMv7 and x86)
+* Android (ARMv7 and x86)
 And maybe one day Sibuserv will be able to build C++ apps for OS X too.
 
 This project is not self-contained, it depends on few other projects:
