@@ -1,6 +1,11 @@
 --- v1.0 (2016-xx-xx) ---
 *** common ***
 * Update sample of sibuserv config.
+* Only x86_64 systems are supported now. (Google and Digia have decided to
+  discontinue support of Android SDK, NDK and Qt SDK for 32-bit Linux based
+  systems.)
+* Add separate qt-opensource-linux-x64-android-$(QT_VERSION).run file to
+  download target.
 *** build-supervisor ***
 * Use cppcheck for static code analysis only when it is available.
 * Move cppcheck logs into StaticCodeAnalysis subdirectory.
