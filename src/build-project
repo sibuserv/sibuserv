@@ -239,6 +239,8 @@ EndBuild()
 
 PrepareBuild()
 {
+   unset CC CXX CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
+
    case "${BUILD_SYSTEM_TYPE}" in
     "qmake")
         if [[ "${SYSTEM}" == *mingw* ]]
@@ -282,8 +284,8 @@ PrepareBuild()
             echo "Build of cmake-based projects for Android is not supported yet."
             continue
         else
-            export CONFIGURE_TOOL="$(which cmake)"
             . "${LXE_DIR}/etc/${SYSTEM}.sh"
+            export CONFIGURE_TOOL="$(which cmake)"
             local  CMAKE_TOOLCHAIN_FILE="${SYSTEM_DIR}/sysroot/usr/share/cmake/${SYSTEM}.config.cmake"
             local  CC=$(ls "${SYSTEM_DIR}/bin/${TARGET}"-gcc-[0-9]* 2> /dev/null | sort -V | tail -n1)
             local  CXX=$(ls "${SYSTEM_DIR}/bin/${TARGET}"-g++-[0-9]* 2> /dev/null | sort -V | tail -n1)
@@ -307,52 +309,64 @@ PrepareBuild()
             export PATH="${MXE_DIR}/usr/bin:${SYSTEM_DIR}/qt5/bin:${ORIG_PATH}"
         elif [[ "${SYSTEM}" == *android* ]]
         then
-            export CONFIGURE_TOOL="${PROJECT_FILE}"
-            export ARCH="$(echo ${SYSTEM} | sed -ne 's|^android_\(.*\)|\1|p')"
-            [ "${ARCH}" = "armv7" ] && export ARCH="arm" || true
+            local  ARCH="$(echo ${SYSTEM} | sed -ne 's|^android_\(.*\)|\1|p')"
+            [ "${ARCH}" = "armv7" ] && local ARCH="arm" || true
             # target
             if [ "${ARCH}" = "arm" ] ; then
-                export TARGET="arm-linux-androideabi"
+                local TARGET="arm-linux-androideabi"
             elif [ "${ARCH}" = "arm64" ] ; then
-                export TARGET="aarch64-linux-android"
+                local TARGET="aarch64-linux-android"
             elif [ "${ARCH}" = "mips" ] ; then
-                export TARGET="mipsel-linux-android"
+                local TARGET="mipsel-linux-android"
             elif [ "${ARCH}" = "mips64" ] ; then
-                export TARGET="mips64el-linux-android"
+                local TARGET="mips64el-linux-android"
             elif [ "${ARCH}" = "x86" ] ; then
-                export TARGET="i686-linux-android"
+                local TARGET="i686-linux-android"
             elif [ "${ARCH}" = "x86_64" ] ; then
-                export TARGET="x86_64-linux-android"
+                local TARGET="x86_64-linux-android"
             else
-                export TARGET="${ARCH}"
+                local TARGET="${ARCH}"
             fi
             # dirty fix because of irrational Android NDK developers
             if [ "${ARCH}" = "x86" ]
             then
-                export TARGET_SPECIAL_NAME="x86"
+                local TARGET_SPECIAL_NAME="x86"
             elif [ "${ARCH}" = "x86_64" ]
             then
-                export TARGET_SPECIAL_NAME="x86_64"
+                local TARGET_SPECIAL_NAME="x86_64"
             else
-                export TARGET_SPECIAL_NAME="${TARGET}"
+                local TARGET_SPECIAL_NAME="${TARGET}"
             fi
             #
             export ANDROID_SYSROOT="${ANDROID_NDK_ROOT}/platforms/${ANDROID_PLATFORM}/arch-${ARCH}"
-            export CPPFLAGS="--sysroot=${ANDROID_SYSROOT}"
-            export CXXFLAGS="--sysroot=${ANDROID_SYSROOT}"
-            export CFLAGS="--sysroot=${ANDROID_SYSROOT}"
+            local  ANDROID_PREFIX="${ANDROID_NDK_ROOT}/toolchains/${TARGET_SPECIAL_NAME}-${ANDROID_NDK_TOOLCHAIN_VERSION}/prebuilt/linux-x86_64"
+            local  ANDROID_LLVM_DIR="${ANDROID_NDK_ROOT}/toolchains/llvm/prebuilt/linux-x86_64"
+            local  ANDROID_SOURCES_CXX_STL="${ANDROID_NDK_ROOT}/sources/cxx-stl"
+            export CFLAGS="--sysroot=${ANDROID_SYSROOT} \
+                           -I${ANDROID_SYSROOT}/usr/include \
+                           -I${ANDROID_PREFIX}/include \
+                           "
+#                           -I${ANDROID_NDK_ROOT}/sources/android/support/include \
+#                           -I${ANDROID_SOURCES_CXX_STL}/system/include \
+#                           -I${ANDROID_SOURCES_CXX_STL}/gabi++/include \
+#                           -I${ANDROID_SOURCES_CXX_STL}/gnu-libstdc++/${ANDROID_NDK_TOOLCHAIN_VERSION}/include \
+#                           -I${ANDROID_SOURCES_CXX_STL}/gnu-libstdc++/${ANDROID_NDK_TOOLCHAIN_VERSION}/libs/${ARCH}/include \
+            export LDFLAGS="-L${ANDROID_SYSROOT}/usr/lib -L${ANDROID_PREFIX}/lib"
+            export CPPFLAGS="${CFLAGS}"
+            export CXXFLAGS="${CFLAGS}"
+            export CONFIGURE_TOOL="${PROJECT_FILE}"
             export CONFIGURE_OPTIONS="--target=${TARGET} --host=${TARGET} --with-sysroot=${ANDROID_SYSROOT} --prefix=/usr"
             export MAKE_TOOL="make"
             export MAKE_OPTIONS="-j${JOBS} -i -k"
             export PATH="${ORIG_PATH}"
             export PATH="${ANDROID_SDK_ROOT}/tools:${PATH}"
             export PATH="${ANDROID_SDK_ROOT}/platform-tools:${PATH}"
-            export PATH="${ANDROID_NDK_ROOT}/toolchains/llvm/prebuilt/linux-x86_64/bin:${PATH}"
-            export PATH="${ANDROID_NDK_ROOT}/toolchains/${TARGET_SPECIAL_NAME}-${ANDROID_NDK_TOOLCHAIN_VERSION}/prebuilt/linux-x86_64/bin:${PATH}"
+            export PATH="${ANDROID_LLVM_DIR}/bin:${PATH}"
+            export PATH="${ANDROID_PREFIX}/bin:${PATH}"
             export PATH="${QT_SDK_DIR}/${SYSTEM}/bin:${PATH}"
         else
-            export CONFIGURE_TOOL="${PROJECT_FILE}"
             . "${LXE_DIR}/etc/${SYSTEM}.sh"
+            export CONFIGURE_TOOL="${PROJECT_FILE}"
             export CONFIGURE_OPTIONS="--target=${TARGET} --host=${TARGET} --prefix=/usr"
             export MAKE_TOOL="make"
             export MAKE_OPTIONS="-j${JOBS} -i -k"
@@ -378,23 +392,26 @@ BuildProject()
         "${MAKE_TOOL}" INSTALL_ROOT="${BUILD_SUB_DIR}/android-build" install &>> "${LOG_FILE}"
 
         SETTINGS_FILE="$(find ${BUILD_SUB_DIR} -type f -name '*.so-deployment-settings.json' | head -n1)"
-        androiddeployqt \
-            --input "${SETTINGS_FILE}" \
-            --output "${BUILD_SUB_DIR}/android-build" \
-            --deployment bundled \
-            --android-platform "${ANDROID_PLATFORM}" \
-            --jdk "${JDK}" \
-            --ant "${ANT}" \
-            &>> "${LOG_FILE}"
-        #    --sign foo bar \
-        #    --sign 'example' \
-        #    --storepass '123456' \
+        if [ ! -z "${SETTINGS_FILE}" ]
+        then
+            androiddeployqt \
+                --input "${SETTINGS_FILE}" \
+                --output "${BUILD_SUB_DIR}/android-build" \
+                --deployment bundled \
+                --android-platform "${ANDROID_PLATFORM}" \
+                --jdk "${JDK}" \
+                --ant "${ANT}" \
+                &>> "${LOG_FILE}"
+            #    --sign foo bar \
+            #    --sign 'example' \
+            #    --storepass '123456' \
 
-        # APP_FILE_NAME=QtApp-release-unsigned.apk
-        APP_FILE_NAME=QtApp-debug-unaligned.apk
-        cp -af "${BUILD_SUB_DIR}/android-build/bin/${APP_FILE_NAME}" \
-               "${BUILD_SUB_DIR}/$(basename ${PROJECT_DIR})_${SYSTEM:8}_${ANDROID_PLATFORM}.apk" \
-               &>> "${LOG_FILE}"
+            # APP_FILE_NAME=QtApp-release-unsigned.apk
+            APP_FILE_NAME=QtApp-debug-unaligned.apk
+            cp -af "${BUILD_SUB_DIR}/android-build/bin/${APP_FILE_NAME}" \
+                   "${BUILD_SUB_DIR}/$(basename ${PROJECT_DIR})_${SYSTEM:8}_${ANDROID_PLATFORM}.apk" \
+                   &>> "${LOG_FILE}"
+        fi
     fi
 }
 
