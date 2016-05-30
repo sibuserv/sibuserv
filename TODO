@@ -1,6 +1,4 @@
 --- TODO ---
-! Add support of a list of directories in SOURCES_DIR (SOURCE_DIRS) variable.
-  Use ":" as a separator.
 * Add support of spec scripts which will allow users to configure, build and
   install projects in a user defined way.
 * Add examples of qmake-, cmake- and autotools-based projects which could be

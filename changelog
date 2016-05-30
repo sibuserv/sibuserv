@@ -17,7 +17,9 @@
   - ENABLE_CPPCHECK_XML
   - ENABLE_CPPCHECK_HTML
   - CPPCHECK_OPTIONS
-* Tiny fix in processing projects algorithm.
+* Improve projects processing algorithm.
+* Add support of a list of directories in BUILD_SERVER_SRC_DIRS variable.
+  ":" is used as a delimiter.
 *** build-project ***
 * Add support of build of autotools-based projects for Android.
 

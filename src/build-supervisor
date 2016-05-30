@@ -8,7 +8,7 @@
 # Number of compilation processes:
 [ -z "${JOBS}" ] && export JOBS=4
 
-export SOURCES_DIR="${HOME}/BuildServer/Sources"
+export BUILD_SERVER_SRC_DIRS="${HOME}/BuildServer/Sources"
 export BUILD_SERVER_DIR="${HOME}/BuildServer/Binaries"
 export BUILD_SERVER_LOG="${BUILD_SERVER_DIR}/build-server-daemon.log"
 
@@ -34,7 +34,7 @@ SYSTEMS="i686-w64-mingw32.static
 for CONF_FILE in "/etc/sibuserv/sibuserv.conf" \
                  "${HOME}/.config/sibuserv/sibuserv.conf"
 do
-    [ -r "${CONF_FILE}" ] && . "${CONF_FILE}"
+    [ -r "${CONF_FILE}" ] && . "${CONF_FILE}" || true
 done
 
 ##### Some tools #####
@@ -208,12 +208,8 @@ StartStaticCodeAnalysis()
     fi
 }
 
-##### Script body #####
-
-cd "${SOURCES_DIR}" || exit 1
-
-for PROJECT in *
-do
+ProcessProject()
+{
     GetLastBuiltVersion
     GetCurrentVersion
 
@@ -238,5 +234,26 @@ do
         StartStaticCodeAnalysis
         EndProjectBuild
     fi
+}
+
+##### Script body #####
+
+export DELIMITER=":"
+while [ "${BUILD_SERVER_SRC_DIRS}" ]
+do
+    export SOURCES_DIR="${BUILD_SERVER_SRC_DIRS%%${DELIMITER}*}"
+    if [ "${BUILD_SERVER_SRC_DIRS}" != "${SOURCES_DIR}" ]
+    then
+        BUILD_SERVER_SRC_DIRS="${BUILD_SERVER_SRC_DIRS#*${DELIMITER}}"
+    else
+        export BUILD_SERVER_SRC_DIRS=""
+    fi
+
+    cd "${SOURCES_DIR}" || continue
+    [ "$(ls | wc -l)" = "0" ] && continue || true
+    for PROJECT in *
+    do
+        [ -d "${SOURCES_DIR}/${PROJECT}" ] && ProcessProject || true
+    done
 done
 
