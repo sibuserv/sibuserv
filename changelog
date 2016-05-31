@@ -20,6 +20,10 @@
 * Improve projects processing algorithm.
 * Add support of a list of directories in BUILD_SERVER_SRC_DIRS variable.
   ":" is used as a delimiter.
+* Code refactoring + renaming of some config variables:
+  SOURCES_DIR      --> BUILD_SERVER_SRC_DIRS
+  BUILD_SERVER_DIR --> BUILD_SERVER_BIN_DIR
+  BUILD_SERVER_LOG --> BUILD_SERVER_LOG_FILE
 *** build-project ***
 * Add support of build of autotools-based projects for Android.
 

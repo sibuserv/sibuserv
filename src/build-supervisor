@@ -9,8 +9,8 @@
 [ -z "${JOBS}" ] && export JOBS=4
 
 export BUILD_SERVER_SRC_DIRS="${HOME}/BuildServer/Sources"
-export BUILD_SERVER_DIR="${HOME}/BuildServer/Binaries"
-export BUILD_SERVER_LOG="${BUILD_SERVER_DIR}/build-server-daemon.log"
+export BUILD_SERVER_BIN_DIR="${HOME}/BuildServer/Binaries"
+export BUILD_SERVER_LOG_FILE="${BUILD_SERVER_BIN_DIR}/build-server-daemon.log"
 
 export STATIC_CODE_ANALYSIS_LOGS_SUBDIR="StaticCodeAnalysis"
 export ENABLE_STATIC_CODE_ANALYSIS="true"
@@ -41,8 +41,8 @@ done
 
 GetLastBuiltVersion()
 {
-    mkdir -p "${BUILD_SERVER_DIR}/${PROJECT}"
-    cd "${BUILD_SERVER_DIR}/${PROJECT}"
+    mkdir -p "${BUILD_SERVER_BIN_DIR}/${PROJECT}"
+    cd "${BUILD_SERVER_BIN_DIR}/${PROJECT}"
     BUILD_VER=$(ls 2> /dev/null | sort -V | tail -n1)
 }
 
@@ -85,12 +85,12 @@ PrepareProjectBuild()
 
 BeginProjectBuild()
 {
-    echo "$(date +"[%Y-%m-%d %H:%M:%S]") build: ${PROJECT}: ${CURRENT_VER}" &>> "${BUILD_SERVER_LOG}"
+    echo "$(date +"[%Y-%m-%d %H:%M:%S]") build: ${PROJECT}: ${CURRENT_VER}" &>> "${BUILD_SERVER_LOG_FILE}"
 }
 
 EndProjectBuild()
 {
-    echo "$(date +"[%Y-%m-%d %H:%M:%S]") done:  ${PROJECT}: ${CURRENT_VER}" &>> "${BUILD_SERVER_LOG}"
+    echo "$(date +"[%Y-%m-%d %H:%M:%S]") done:  ${PROJECT}: ${CURRENT_VER}" &>> "${BUILD_SERVER_LOG_FILE}"
 }
 
 IsCmakeProject()
@@ -249,7 +249,9 @@ do
         export BUILD_SERVER_SRC_DIRS=""
     fi
 
-    cd "${SOURCES_DIR}" || continue
+    [ ! -d "${SOURCES_DIR}" ] && continue || true
+    cd "${SOURCES_DIR}"
+
     [ "$(ls | wc -l)" = "0" ] && continue || true
     for PROJECT in *
     do
