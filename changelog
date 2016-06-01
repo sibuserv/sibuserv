@@ -4,7 +4,7 @@
 * Only x86_64 systems are supported now. (Google and Digia have decided to
   discontinue support of Android SDK, NDK and Qt SDK for 32-bit Linux based
   systems.)
-* Add separate qt-opensource-linux-x64-android-$(QT_VERSION).run file to
+* Add a separate qt-opensource-linux-x64-android-$(QT_VERSION).run file to
   download target.
 * Update Android NDK version from r10e to r11c.
 *** build-supervisor ***
