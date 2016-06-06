@@ -34,6 +34,8 @@
     version control systems instead of "unknown-version"
     ('+%Y%m%d-%H%M%S')
 * Add IsQmakeProject() function and use it in ProcessProject().
+* Fix InstallCmakeProject() and InstallAutotoolsProject() for cases when
+  `make install` is failed.
 *** build-project ***
 * Add support of build of autotools-based projects for Android.
 

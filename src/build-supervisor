@@ -149,7 +149,7 @@ InstallQmakeProject()
         while read F; do rm -f "${F}"; done
     for S in *
     do
-        [ "${S}" == "${STATIC_CODE_ANALYSIS_LOGS_SUBDIR}" ] && continue || true
+        [ "${S}" = "${STATIC_CODE_ANALYSIS_LOGS_SUBDIR}" ] && continue || true
 
         find "${BUILD_DIR}/${S}" -type f | \
             while read F; do mv "${F}" "${S}/" 2> /dev/null; done
@@ -162,10 +162,11 @@ InstallCmakeProject()
     cd "${BUILD_DIR}"
     for S in *
     do
-        [ "${S}" == "${STATIC_CODE_ANALYSIS_LOGS_SUBDIR}" ] && continue || true
+        [ "${S}" = "${STATIC_CODE_ANALYSIS_LOGS_SUBDIR}" ] && continue || true
 
         cd "${BUILD_DIR}/${S}"
         make install DESTDIR="${BUILD_DIR}/${S}-out" -j1 -i -k &> /dev/null
+        [ ! -d "${BUILD_DIR}/${S}-out" ] && mkdir "${BUILD_DIR}/${S}-out" || true
         cp -af *.log "${BUILD_DIR}/${S}-out" &> /dev/null
 
         cd "${BUILD_DIR}"
@@ -179,10 +180,11 @@ InstallAutotoolsProject()
     cd "${BUILD_DIR}"
     for S in *
     do
-        [ "${S}" == "${STATIC_CODE_ANALYSIS_LOGS_SUBDIR}" ] && continue || true
+        [ "${S}" = "${STATIC_CODE_ANALYSIS_LOGS_SUBDIR}" ] && continue || true
 
         cd "${BUILD_DIR}/${S}"
         make install DESTDIR="${BUILD_DIR}/${S}-out" -j1 -i -k &> /dev/null
+        [ ! -d "${BUILD_DIR}/${S}-out" ] && mkdir "${BUILD_DIR}/${S}-out" || true
         cp -af *.log "${BUILD_DIR}/${S}-out" &> /dev/null
 
         cd "${BUILD_DIR}"
