@@ -208,7 +208,7 @@ DetectBuildAutomationSystemType()
     if [ "$(ls *.pro 2> /dev/null | wc -l)" != "0" ]
     then
         export BUILD_SYSTEM_TYPE="qmake"
-        export PROJECT_FILE="${PROJECT_DIR}/$(ls *.pro | head)"
+        export PROJECT_FILE="${PROJECT_DIR}/$(ls *.pro | head -n1)"
         return 0
     elif [ "$(ls CMakeLists.txt 2> /dev/null | wc -l)" != "0" ]
     then
