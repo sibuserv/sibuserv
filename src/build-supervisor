@@ -105,6 +105,13 @@ EndProjectBuild()
     echo "$(date +"[%Y-%m-%d %H:%M:%S]") done:  ${PROJECT}: ${CURRENT_VER}" &>> "${BUILD_SERVER_LOG_FILE}"
 }
 
+IsQmakeProject()
+{
+    [ $(grep qmake "${BUILD_DIR}"/*/Makefile 2> /dev/null | wc -l) != "0" ] && \
+        return 0 || \
+        return 1
+}
+
 IsCmakeProject()
 {
     [ $(ls "${BUILD_DIR}"/*/CMakeCache.txt 2> /dev/null | wc -l) != "0" ] && \
@@ -239,7 +246,8 @@ ProcessProject()
         elif IsCmakeProject
         then
             InstallCmakeProject
-        else
+        elif IsQmakeProject
+        then
             InstallQmakeProject
         fi
 

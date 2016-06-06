@@ -33,6 +33,7 @@
   - use date and time based version format for directories which do not use
     version control systems instead of "unknown-version"
     ('+%Y%m%d-%H%M%S')
+* Add IsQmakeProject() function and use it in ProcessProject().
 *** build-project ***
 * Add support of build of autotools-based projects for Android.
 
