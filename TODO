@@ -7,7 +7,6 @@
   variable by its name: android-<Android API level>_<target architecture>.
 * Add support of static code analysis using Clang Static Analyzer (from host
   system or from QtCreator >= 4.x).
-* Add support of projects stored in mercurial repos.
 * Add support of build of cmake-based projects for Android.
 ? Add support of sending email messages when build of project is failed.
 ? Add support of build for Ubuntu Touch.

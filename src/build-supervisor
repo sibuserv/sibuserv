@@ -50,25 +50,37 @@ GetCurrentVersion()
 {
     cd "${SOURCES_DIR}/${PROJECT}"
     CURRENT_VER="unknown-version"
-    if [ -d ".svn" ]
-    then
-        svn up &> /dev/null
-        CURRENT_VER=$(LANG=C svn info 2> /dev/null | sed -ne "s|^Last Changed Rev: \(.*\)|\1|p")
-    elif [ -d ".git" ]
+    if [ -d ".git" ]
     then
         if [ -d ".git/svn" ]
         then
             git svn rebase &> /dev/null
             CURRENT_VER=$(LANG=C git svn info 2> /dev/null | sed -ne "s|^Last Changed Rev: \(.*\)|\1|p")
+        elif [ -d ".git/hg" ]
+        then
+            # git-remote-hg is used
+            git pull --all &> /dev/null
+            CURRENT_VER="$(TZ=UTC git show -s --pretty='format:%ad__%h' --date=format-local:'%Y%m%d-%H%M%S')"
         else
             git pull --all &> /dev/null
             if git describe --tags &> /dev/null
             then
                 CURRENT_VER="$(git describe --tags)"
             else
-                CURRENT_VER=$(date +"%Y-%m-%d_%H-%M-%S")_$(git show -s --pretty=format:%h)
+                CURRENT_VER="$(TZ=UTC git show -s --pretty='format:%ad__%h' --date=format-local:'%Y%m%d-%H%M%S')"
             fi
         fi
+    elif [ -d ".hg" ]
+    then
+        hg pull &> /dev/null
+        hg update &> /dev/null
+        CURRENT_VER="$(TZ=UTC hg log --limit 1 -T '{date(date|localdate,"%Y%m%d-%H%M%S")}__{node|short}\n' | head -n1)"
+    elif [ -d ".svn" ]
+    then
+        svn up &> /dev/null
+        CURRENT_VER="$(LANG=C svn info 2> /dev/null | sed -ne 's|^Last Changed Rev: \(.*\)|\1|p')"
+    else
+        CURRENT_VER="$(TZ=UTC date -d @$(stat -c'%Y' .) '+%Y%m%d-%H%M%S')"
     fi
 }
 
