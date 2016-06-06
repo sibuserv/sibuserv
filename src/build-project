@@ -181,10 +181,10 @@ fi
 
 DefinePaths()
 {
-    if [[ "${SYSTEM}" == *mingw* ]]
+    if [[ "${SYSTEM}" = *mingw* ]]
     then
         export SYSTEM_DIR="${MXE_DIR}/usr/${SYSTEM}"
-    elif [[ "${SYSTEM}" == *android* ]]
+    elif [[ "${SYSTEM}" = *android* ]]
     then
         export SYSTEM_DIR="${QT_SDK_DIR}/${SYSTEM}"
     else
@@ -280,14 +280,14 @@ PrepareBuild()
 
    case "${BUILD_SYSTEM_TYPE}" in
     "qmake")
-        if [[ "${SYSTEM}" == *mingw* ]]
+        if [[ "${SYSTEM}" = *mingw* ]]
         then
             export CONFIGURE_TOOL="${SYSTEM_DIR}/qt5/bin/qmake"
             export CONFIGURE_OPTIONS="-r -spec win32-g++ ${PROJECT_FILE}"
             export MAKE_TOOL="make"
             export MAKE_OPTIONS="-j${JOBS} -i -k"
             export PATH="${MXE_DIR}/usr/bin:${SYSTEM_DIR}/qt5/bin:${ORIG_PATH}"
-        elif [[ "${SYSTEM}" == *android* ]]
+        elif [[ "${SYSTEM}" = *android* ]]
         then
             export CONFIGURE_TOOL="${SYSTEM_DIR}/bin/qmake"
             export CONFIGURE_OPTIONS="-r -spec android-g++ ${PROJECT_FILE} ANDROID_NDK_ROOT=${ANDROID_NDK_ROOT}"
@@ -306,7 +306,7 @@ PrepareBuild()
         fi
     ;;
     "cmake")
-        if [[ "${SYSTEM}" == *mingw* ]]
+        if [[ "${SYSTEM}" = *mingw* ]]
         then
             export CONFIGURE_TOOL="$(which cmake)"
             local  CMAKE_TOOLCHAIN_FILE="${SYSTEM_DIR}/share/cmake/mxe-conf.cmake"
@@ -316,7 +316,7 @@ PrepareBuild()
             export MAKE_TOOL="make"
             export MAKE_OPTIONS="-j${JOBS} -i -k"
             export PATH="${MXE_DIR}/usr/bin:${SYSTEM_DIR}/qt5/bin:${ORIG_PATH}"
-        elif [[ "${SYSTEM}" == *android* ]]
+        elif [[ "${SYSTEM}" = *android* ]]
         then
             echo "Build of cmake-based projects for Android is not supported yet."
             continue
@@ -337,14 +337,14 @@ PrepareBuild()
         fi
     ;;
     "autotools")
-        if [[ "${SYSTEM}" == *mingw* ]]
+        if [[ "${SYSTEM}" = *mingw* ]]
         then
             export CONFIGURE_TOOL="${PROJECT_FILE}"
             export CONFIGURE_OPTIONS="--target=${SYSTEM} --host=${SYSTEM} --prefix=/usr"
             export MAKE_TOOL="make"
             export MAKE_OPTIONS="-j${JOBS} -i -k"
             export PATH="${MXE_DIR}/usr/bin:${SYSTEM_DIR}/qt5/bin:${ORIG_PATH}"
-        elif [[ "${SYSTEM}" == *android* ]]
+        elif [[ "${SYSTEM}" = *android* ]]
         then
             SetAndroidSpecificVariables
             export ANDROID_SYSROOT="${ANDROID_NDK_ROOT}/platforms/${ANDROID_PLATFORM}/arch-${ARCH}"
@@ -390,7 +390,7 @@ BuildProject()
     "${CONFIGURE_TOOL}" ${CONFIGURE_OPTIONS} &>> "${LOG_FILE}"
     "${MAKE_TOOL}" ${MAKE_OPTIONS} &>> "${LOG_FILE}"
 
-    if [[ "${SYSTEM}" == *android* ]]
+    if [[ "${SYSTEM}" = *android* ]]
     then
         "${MAKE_TOOL}" INSTALL_ROOT="${BUILD_SUB_DIR}/android-build" install &>> "${LOG_FILE}"
 
