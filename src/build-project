@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export PROJECT_DIR="$(realpath -s ${PWD})"
+export PROJECT_DIR="$(realpath -s .)"
 
 [ -z "${BUILD_DIR}" ] && \
     export BUILD_DIR="$(realpath -s "${PROJECT_DIR}/../build")-$(basename "${PROJECT_DIR}")"

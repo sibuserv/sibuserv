@@ -38,6 +38,7 @@
   `make install` is failed.
 *** build-project ***
 * Add support of build of autotools-based projects for Android.
+* Fix setting of PROJECT_DIR variable using `realpath` tool.
 * Get rid of extra bashisms.
 
 --- v0.9 (2016-03-28) ---
