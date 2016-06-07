@@ -36,7 +36,15 @@
 * Add IsQmakeProject() function and use it in ProcessProject().
 * Fix InstallCmakeProject() and InstallAutotoolsProject() for cases when
   `make install` is failed.
+* Improve work with projects containing special characters in paths and/or
+  project directory names.
 *** build-project ***
+* Add support of build from paths and directories containing special characters
+  (\\\$\&\*\(\)\[\]\ \"\'\`#=). In such cases sources are copied into
+  "tmp-sources-dir" subdirectory before build. Unfortunately *.apk files for
+  Android cannot be built due to bug in androiddeployqt. In common case it is
+  highly recommended do not use paths and project directory names with spaces
+  or special characters.
 * Add support of build of autotools-based projects for Android.
 * Fix setting of PROJECT_DIR variable using `realpath` tool.
 * Get rid of extra bashisms.
