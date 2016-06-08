@@ -132,30 +132,30 @@ InstallQmakeProject()
     build-project clean ${SYSTEMS} &> /dev/null
 
     cd "${BUILD_DIR}"
-    rm -rf "${BUILD_DIR}"/*/tmp-sources-dir
-    find "${BUILD_DIR}" -type f \
+    rm -rf ./*/tmp-sources-dir
+    find . -type f \
         -name '*object_script*' -o \
         -name '*Makefile*' -o \
         -name '*.cpp' -o \
         -name '*.h' | \
         while read F; do rm -f "${F}"; done
-    find "${BUILD_DIR}" -type f \
+    find . -type f \
         -name '*.a' | \
         while read F; do rm -f "${F}"; done
-    find "${BUILD_DIR}" -type d \
+    find . -type d \
         -name '*android-build*' | \
         while read F; do rm -rf "${F}"; done
-    find "${BUILD_DIR}" -type f | \
+    find . -type f | \
         grep '.*android_.*\.so' | \
         while read F; do rm -f "${F}"; done
     for S in *
     do
         [ "${S}" = "${STATIC_CODE_ANALYSIS_LOGS_SUBDIR}" ] && continue || true
 
-        find "${BUILD_DIR}/${S}" -type f | \
+        find "${S}" -type f | \
             while read F; do mv "${F}" "${S}/" 2> /dev/null; done
     done
-    find "${BUILD_DIR}" -depth -empty -delete
+    find . -depth -empty -delete
 }
 
 InstallCmakeProject()
