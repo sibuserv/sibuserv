@@ -244,6 +244,8 @@ ProcessProject()
         elif IsQmakeProject
         then
             InstallQmakeProject
+        else
+            InstallUsualProject
         fi
 
         StartStaticCodeAnalysis
