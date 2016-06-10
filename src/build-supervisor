@@ -126,17 +126,6 @@ IsAutotoolsProject()
         return 1
 }
 
-RandomSalt()
-{
-    if [[ "${1}" =~ ^[0-9]+$ ]]
-    then
-        local STRING_SIZE="${1}"
-    else
-        local STRING_SIZE="32"
-    fi
-    cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w "${STRING_SIZE}" | head -n1
-}
-
 InstallUsualProject()
 {
     cd "${BUILD_DIR}"
@@ -145,15 +134,7 @@ InstallUsualProject()
         [ "${S}" = "${STATIC_CODE_ANALYSIS_LOGS_SUBDIR}" ] && continue || true
 
         cd "${BUILD_DIR}/${S}" || continue
-        if [ -d "./tmp-sources-dir" ]
-        then
-            TMP_DIR="/tmp/sibuserv_$(RandomSalt)"
-            rm -rf "${TMP_DIR}"
-            make install DESTDIR="${TMP_DIR}" -j1 -i -k &> /dev/null
-            mv "${TMP_DIR}" "${BUILD_DIR}/${S}-out" &> /dev/null
-        else
-            make install DESTDIR="../${S}-out" -j1 -i -k &> /dev/null
-        fi
+        make install DESTDIR="../${S}-out" -j1 -i -k &> /dev/null
         [ ! -d "${BUILD_DIR}/${S}-out" ] && mkdir "${BUILD_DIR}/${S}-out" || true
         cp -af *.log "${BUILD_DIR}/${S}-out" &> /dev/null
 
