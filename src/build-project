@@ -204,13 +204,46 @@ CheckSystem()
 
 IsSafePath()
 {
+    # return 0
+
     [ -z "${1}" ] && return 1 || true
 
-    # if [[ "${1}" = *[\\\"\#\$\&\'\`\ \	]* ]]
-    if [[ "${1}" = *[\\\$\&\*\(\)\[\]\ \"\'\`#=]* ]]
+    # All special characters:
+    # autotools:    *[\\\$\&\*\(\)\[\]\ \"\'\`\;:#=]*
+    # cmake:        *[\\\$\&\*\(\)\[\]\ \"\'\`\;:#=]*
+    # qmake:        *[\\\|\$\&\(\)\<\>\ \"\'\`\;:#=]*
+    #
+    # Not fixed (subdir workaround):
+    # autotools:    *[\\\$\&\(\)\"\'\`#]*
+    # cmake:        *[\\\"]*
+    # qmake:        *[\\\"]*
+    if [[ "${1}" = *[\\\|\$\&\*\(\)\[\]\<\>\ \"\'\`\;:#=]* ]]
     then
        return 1
     fi
+}
+
+IsAndroidDeployQtSafePath()
+{
+    [ -z "${1}" ] && return 1 || true
+
+    # Not fixed (subdir in /tmp workaround):
+    # *[\|\;:]*
+    if [[ "${1}" = *[\\\|\(\)\<\>\"\'\`\;:]* ]]
+    then
+       return 1
+    fi
+}
+
+RandomSalt()
+{
+    if [[ "${1}" =~ ^[0-9]+$ ]]
+    then
+        local STRING_SIZE="${1}"
+    else
+        local STRING_SIZE="32"
+    fi
+    cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w ${STRING_SIZE} | head -n1
 }
 
 DetectBuildAutomationSystemType()
@@ -400,6 +433,75 @@ PrepareBuild()
     esac
 }
 
+IsAvailableDiskSpaceEnough()
+{
+    [ -z "${1}" ] && return 1 || true
+    [ -z "${2}" ] && return 1 || true
+
+    REQUIRED=$(du -s "${1}" | awk '{print $1}' | tail -n1)
+    AVAILABLE=$(df -k "${2}" | awk '{print $4}' | tail -n1)
+
+    if [ "${REQUIRED}" -ge "${AVAILABLE}" ]
+    then
+        return 1
+    fi
+}
+
+BuildAndroidPackage()
+{
+    [ "$(which androiddeployqt 2> /dev/null | wc -l)" = "0" ] && return 0 || true
+
+    local ANDROID_SETTINGS_FILE="$(find . -type f -name '*.so-deployment-settings.json' | head -n1)"
+    if [ ! -z "${ANDROID_SETTINGS_FILE}" ]
+    then
+        if ! IsAndroidDeployQtSafePath "${BUILD_SUB_DIR}/android-build"
+        then
+            if IsAvailableDiskSpaceEnough "." "/tmp"
+            then
+                local TMP_DIR="/tmp/sibuserv_$(RandomSalt)"
+
+                mkdir -p "${TMP_DIR}/"
+                cp -af * "${TMP_DIR}/"
+
+                local ANDROID_SETTINGS_FILE="$(find ${TMP_DIR} -type f -name '*.so-deployment-settings.json' | head -n1)"
+
+                # sed -i 's|File"Converter|File\\\"Converter|g' "${ANDROID_SETTINGS_FILE}"
+                # sed -i 's|File`Converter|File\\\`Converter|g' "${ANDROID_SETTINGS_FILE}"
+                # sed -i 's|File(Converter|File\\\(Converter|g' "${ANDROID_SETTINGS_FILE}"
+
+                sed -i "s|${BUILD_SUB_DIR}|${TMP_DIR}|g" "${ANDROID_SETTINGS_FILE}"
+            fi
+        fi
+
+        local ANDROID_BUILD_DIR="./android-build"
+        rm -rf "${ANDROID_BUILD_DIR}"
+        "${MAKE_TOOL}" INSTALL_ROOT="${ANDROID_BUILD_DIR}" install
+
+        androiddeployqt \
+            --input  "${ANDROID_SETTINGS_FILE}" \
+            --output "${ANDROID_BUILD_DIR}" \
+            --android-platform "${ANDROID_PLATFORM}" \
+            --deployment bundled \
+            --jdk "${JDK}" \
+            --ant "${ANT}" \
+            --verbose
+        #    --sign foo bar \
+        #    --sign 'example' \
+        #    --storepass '123456' \
+
+        # APP_FILE_NAME=QtApp-release-unsigned.apk
+        local APP_FILE_NAME=QtApp-debug-unaligned.apk
+        local PROJECT_NAME=$(basename "${PROJECT_DIR}")
+        cp -af "${ANDROID_BUILD_DIR}/bin/${APP_FILE_NAME}" \
+               "./${PROJECT_NAME}_${SYSTEM:8}_${ANDROID_PLATFORM}.apk"
+
+        if ! IsAndroidDeployQtSafePath "${BUILD_SUB_DIR}/android-build" && [[ "${TMP_DIR}" = *tmp/sibuserv_* ]]
+        then
+            rm -rf "${TMP_DIR}/"
+        fi
+    fi
+}
+
 BuildProject()
 {
     local LOG_FILE="${BUILD_SUB_DIR}/build.log"
@@ -418,32 +520,9 @@ BuildProject()
     "${CONFIGURE_TOOL}" ${CONFIGURE_OPTIONS} &>> "${LOG_FILE}"
     "${MAKE_TOOL}" ${MAKE_OPTIONS} &>> "${LOG_FILE}"
 
-    if [[ "${SYSTEM}" = *android* ]] && [ "$(which androiddeployqt 2> /dev/null | wc -l)" != "0" ]
+    if [[ "${SYSTEM}" = *android* ]]
     then
-        "${MAKE_TOOL}" INSTALL_ROOT="./android-build" install &>> "${LOG_FILE}"
-
-        local SETTINGS_FILE="$(find . -type f -name '*.so-deployment-settings.json' | head -n1)"
-        if [ ! -z "${SETTINGS_FILE}" ]
-        then
-            androiddeployqt \
-                --input "${SETTINGS_FILE}" \
-                --output "./android-build" \
-                --deployment bundled \
-                --android-platform "${ANDROID_PLATFORM}" \
-                --jdk "${JDK}" \
-                --ant "${ANT}" \
-                &>> "${LOG_FILE}"
-            #    --sign foo bar \
-            #    --sign 'example' \
-            #    --storepass '123456' \
-
-            # APP_FILE_NAME=QtApp-release-unsigned.apk
-            local APP_FILE_NAME=QtApp-debug-unaligned.apk
-            local PROJECT_NAME=$(basename "${PROJECT_DIR}")
-            cp -af "./android-build/bin/${APP_FILE_NAME}" \
-                   "./${PROJECT_NAME}_${SYSTEM:8}_${ANDROID_PLATFORM}.apk" \
-                   &>> "${LOG_FILE}"
-        fi
+        BuildAndroidPackage &>> "${LOG_FILE}"
     fi
 }
 

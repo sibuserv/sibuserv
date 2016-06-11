@@ -86,7 +86,7 @@ GetCurrentVersion()
 
 PrepareProjectBuild()
 {
-    export BUILD_DIR="/home/boris/BuildServer/${PROJECT}/${CURRENT_VER}"
+    export BUILD_DIR="${BUILD_SERVER_BIN_DIR}/${PROJECT}/${CURRENT_VER}"
     if [ ! -d "${BUILD_DIR}" ]
     then
         mkdir "${BUILD_DIR}"

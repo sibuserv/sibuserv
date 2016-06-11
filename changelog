@@ -40,11 +40,9 @@
   project directory names.
 *** build-project ***
 * Add support of build from paths and directories containing special characters
-  (\\\$\&\*\(\)\[\]\ \"\'\`#=). In such cases sources are copied into
-  "tmp-sources-dir" subdirectory before build. Unfortunately *.apk files for
-  Android cannot be built due to bug in androiddeployqt. In common case it is
-  highly recommended do not use paths and project directory names with spaces
-  or special characters.
+  (\\\$\&\*\(\)\[\]\ \"\'\`\;:#=). In such cases sources are copied into
+  "tmp-sources-dir" subdirectory before build. Also there is special workaround
+  for androiddeployqt during building of *.apk files for Android.
 * Add support of build of autotools-based projects for Android.
 * Fix setting of PROJECT_DIR variable using `realpath` tool.
 * Get rid of extra bashisms.
