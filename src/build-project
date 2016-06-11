@@ -228,7 +228,7 @@ IsAndroidDeployQtSafePath()
     [ -z "${1}" ] && return 1 || true
 
     # Not fixed (subdir in /tmp workaround):
-    # *[\|\;:]*
+    # *[\|]*
     if [[ "${1}" = *[\\\|\(\)\<\>\"\'\`\;:]* ]]
     then
        return 1
@@ -454,11 +454,14 @@ BuildAndroidPackage()
     local ANDROID_SETTINGS_FILE="$(find . -type f -name '*.so-deployment-settings.json' | head -n1)"
     if [ ! -z "${ANDROID_SETTINGS_FILE}" ]
     then
+        local ANDROID_BUILD_DIR="./android-build"
+
         if ! IsAndroidDeployQtSafePath "${BUILD_SUB_DIR}/android-build"
         then
             if IsAvailableDiskSpaceEnough "." "/tmp"
             then
                 local TMP_DIR="/tmp/sibuserv_$(RandomSalt)"
+                local ANDROID_BUILD_DIR="${TMP_DIR}/android-build"
 
                 mkdir -p "${TMP_DIR}/"
                 cp -af * "${TMP_DIR}/"
@@ -473,7 +476,6 @@ BuildAndroidPackage()
             fi
         fi
 
-        local ANDROID_BUILD_DIR="./android-build"
         rm -rf "${ANDROID_BUILD_DIR}"
         "${MAKE_TOOL}" INSTALL_ROOT="${ANDROID_BUILD_DIR}" install
 
@@ -489,16 +491,21 @@ BuildAndroidPackage()
         #    --sign 'example' \
         #    --storepass '123456' \
 
+        if ! IsAndroidDeployQtSafePath "${BUILD_SUB_DIR}/android-build"
+        then
+            if [[ "${TMP_DIR}" = *tmp/sibuserv_* ]]
+            then
+                rm -rf "./android-build"
+                cp -af "${TMP_DIR}/android-build" .
+                rm -rf "${TMP_DIR}/"
+            fi
+        fi
+
         # APP_FILE_NAME=QtApp-release-unsigned.apk
         local APP_FILE_NAME=QtApp-debug-unaligned.apk
         local PROJECT_NAME=$(basename "${PROJECT_DIR}")
-        cp -af "${ANDROID_BUILD_DIR}/bin/${APP_FILE_NAME}" \
+        cp -af "./android-build/bin/${APP_FILE_NAME}" \
                "./${PROJECT_NAME}_${SYSTEM:8}_${ANDROID_PLATFORM}.apk"
-
-        if ! IsAndroidDeployQtSafePath "${BUILD_SUB_DIR}/android-build" && [[ "${TMP_DIR}" = *tmp/sibuserv_* ]]
-        then
-            rm -rf "${TMP_DIR}/"
-        fi
     fi
 }
 
