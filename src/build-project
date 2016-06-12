@@ -216,7 +216,7 @@ IsSafePath()
     # Not fixed (subdir workaround):
     # autotools:    *[\\\$\&\(\)\"\'\`#]*
     # cmake:        *[\\\"]*
-    # qmake:        *[\\\"]*
+    # qmake:        ---
     if [[ "${1}" = *[\\\|\$\&\*\(\)\[\]\<\>\ \"\'\`\;:#=]* ]]
     then
        return 1
@@ -227,8 +227,6 @@ IsAndroidDeployQtSafePath()
 {
     [ -z "${1}" ] && return 1 || true
 
-    # Not fixed (subdir in /tmp workaround):
-    # *[\|]*
     if [[ "${1}" = *[\\\|\(\)\<\>\"\'\`\;:]* ]]
     then
        return 1
@@ -468,11 +466,8 @@ BuildAndroidPackage()
 
                 local ANDROID_SETTINGS_FILE="$(find ${TMP_DIR} -type f -name '*.so-deployment-settings.json' | head -n1)"
 
-                # sed -i 's|File"Converter|File\\\"Converter|g' "${ANDROID_SETTINGS_FILE}"
-                # sed -i 's|File`Converter|File\\\`Converter|g' "${ANDROID_SETTINGS_FILE}"
-                # sed -i 's|File(Converter|File\\\(Converter|g' "${ANDROID_SETTINGS_FILE}"
-
-                sed -i "s|${BUILD_SUB_DIR}|${TMP_DIR}|g" "${ANDROID_SETTINGS_FILE}"
+                sed -i "s|${BUILD_SUB_DIR}|${TMP_DIR}|g" "${ANDROID_SETTINGS_FILE}" &> /dev/null
+                sed -i "s!${BUILD_SUB_DIR}!${TMP_DIR}!g" "${ANDROID_SETTINGS_FILE}" &> /dev/null
             fi
         fi
 
