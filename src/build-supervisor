@@ -162,6 +162,7 @@ InstallQmakeProject()
     cd "${BUILD_DIR}"
     rm -rf ./*/tmp-sources-dir
     find . -type f \
+        -name '*mocinclude.opt*' -o \
         -name '*object_script*' -o \
         -name '*Makefile*' -o \
         -name '*.cpp' -o \
