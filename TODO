@@ -1,4 +1,6 @@
 --- TODO ---
+* Move InstallUsualProject(), InstallCmakeProject(), InstallAutotoolsProject(),
+  InstallQmakeProject() from build-supervisor to build-project.
 * Add support of spec scripts which will allow users to configure, build and
   install projects in a user defined way.
 * Add examples of qmake-, cmake- and autotools-based projects which could be
