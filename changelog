@@ -33,12 +33,15 @@
   - use date and time based version format for directories which do not use
     version control systems instead of "unknown-version"
     ('+%Y%m%d-%H%M%S')
-* Add IsQmakeProject() function and use it in ProcessProject().
-* Fix InstallCmakeProject() and InstallAutotoolsProject() for cases when
-  `make install` is failed.
 * Improve work with projects containing special characters in paths and/or
   project directory names.
+* Delete IsQmakeProject(), IsCmakeProject() and IsAutotoolsProject() functions
+  which are not required anymore.
 *** build-project ***
+* Move InstallUsualProject(), InstallCmakeProject(), InstallAutotoolsProject(),
+  InstallQmakeProject() from build-supervisor to build-project.
+* Fix InstallCmakeProject() and InstallAutotoolsProject() for cases when
+  `make install` is failed.
 * Add support of build from paths and directories containing special characters
   (\\\|\$\&\*\(\)\[\]\<\>\ \"\'\`\;:#=). In such cases sources are copied into
   "tmp-sources-dir" subdirectory before build. Also there is special workaround

@@ -48,7 +48,7 @@ done
 
 IsOption()
 {
-    for OPT in clean distclean delete -V --version -h --help
+    for OPT in install clean distclean delete rename -V --version -h --help
     do
         [ "${1}" = "${OPT}" ] && return 0
     done
@@ -83,9 +83,11 @@ Program should be launched in project directory!
 
 Options:
     list            list of all available target systems
-    clean           clean up (\`make clean\` for all systems)
-    distclean       full clean up (\`make distclean\` for all systems)
-    delete          delete sub-directories (\`rm -rf\` for all systems)
+    install         installation of already built project to destination directory
+                    (\`make install\` for all specified systems)
+    clean           clean up (\`make clean\` for all specified systems)
+    distclean       full clean up (\`make distclean\` for all specified systems)
+    delete          delete sub-directories (\`rm -rf\` for all specified systems)
     -V, --version   display LXE version and exit
     -h, --help      display this help and exit
 
@@ -93,6 +95,8 @@ Examples:
     build-project
     build-project AstraLinux-1.2_static
     build-project Ubuntu-14.04-LTS_i386_shared Ubuntu-14.04-LTS_amd64_shared
+    build-project install
+    build-project install x86_64-w64-mingw32.shared
     build-project list
     build-project clean
     build-project clean AstraLinux-1.2_static i686-w64-mingw32.static
@@ -172,6 +176,18 @@ then
         then
             echo "rm -rf \"${BUILD_SUB_DIR}\""
             rm -rf "${BUILD_SUB_DIR}"
+        fi
+    done
+    exit 0
+elif [ "${1}" = "rename" ]
+then
+    for SYSTEM in ${SYSTEMS}
+    do
+        BUILD_SUB_DIR="${BUILD_DIR}/${SYSTEM}"
+        if [ -d "${BUILD_SUB_DIR}-out" ] && [ ! -d "${BUILD_SUB_DIR}" ]
+        then
+            echo "mv \"${BUILD_SUB_DIR}-out\" \"${BUILD_SUB_DIR}\""
+            mv "${BUILD_SUB_DIR}-out" "${BUILD_SUB_DIR}"
         fi
     done
     exit 0
@@ -528,17 +544,90 @@ BuildProject()
     fi
 }
 
-# Build project using specified systems
+InstallQmakeProject()
+{
+    cd "${BUILD_SUB_DIR}" || continue
+    mkdir -p "../${SYSTEM}-out"
+    cp -af * "../${SYSTEM}-out/" &> /dev/null
 
+    cd "${BUILD_DIR}/${SYSTEM}-out/" || continue
+    make clean &> /dev/null
+    rm -rf ./tmp-sources-dir
+    rm -rf ./android-build
+    find . -type f \
+        -name '*mocinclude.opt*' -o \
+        -name '*object_script*' -o \
+        -name '*Makefile*' -o \
+        -name '*.cpp' -o \
+        -name '*.h' | \
+        while read F; do rm -f "${F}"; done
+    find . -type f \
+        -name '*.a' | \
+        while read F; do rm -f "${F}"; done
+
+    if [[ "${SYSTEM}" = *android* ]]
+    then
+        find . -type f \
+            -name '*.so' -o \
+            -name '*.so-deployment-settings.json' | \
+            while read F; do rm -f "${F}"; done
+    fi
+
+    # Move remain files into top directory
+    find . -type f | \
+        while read F; do mv "${F}" "./" 2> /dev/null; done
+    find . -depth -empty -delete
+}
+
+InstallUsualProject()
+{
+    cd "${BUILD_SUB_DIR}" || continue
+    make install DESTDIR="../${SYSTEM}-out" -j1 -i -k &> /dev/null
+    [ ! -d "../${SYSTEM}-out" ] && mkdir "../${SYSTEM}-out" || true
+    cp -af *.log "../${SYSTEM}-out" &> /dev/null
+}
+
+InstallCmakeProject()
+{
+    InstallUsualProject
+}
+
+InstallAutotoolsProject()
+{
+    InstallUsualProject
+}
+
+InstallProject()
+{
+    case "${BUILD_SYSTEM_TYPE}" in
+    "qmake")
+        InstallQmakeProject
+    ;;
+    "cmake")
+        InstallCmakeProject
+    ;;
+    "autotools")
+        InstallAutotoolsProject
+    ;;
+    esac
+}
+
+##### Script body #####
+
+DetectBuildAutomationSystemType
 for SYSTEM in ${SYSTEMS}
 do
     DefinePaths
     CheckSystem
 
-    DetectBuildAutomationSystemType
-    PrepareBuild
-    BeginBuild
-    BuildProject
-    EndBuild
+    if [ "${1}" = "install" ]
+    then
+        InstallProject
+    else
+        PrepareBuild
+        BeginBuild
+        BuildProject
+        EndBuild
+    fi
 done
 

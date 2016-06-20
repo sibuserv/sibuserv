@@ -107,88 +107,6 @@ EndProjectBuild()
     echo "$(date +"[%Y-%m-%d %H:%M:%S]") done:  ${PROJECT}: ${CURRENT_VER}" &>> "${BUILD_SERVER_LOG_FILE}"
 }
 
-IsQmakeProject()
-{
-    [ $(grep qmake "${BUILD_DIR}"/*/Makefile 2> /dev/null | wc -l) != "0" ] && \
-        return 0 || \
-        return 1
-}
-
-IsCmakeProject()
-{
-    [ $(ls "${BUILD_DIR}"/*/CMakeCache.txt 2> /dev/null | wc -l) != "0" ] && \
-        return 0 || \
-        return 1
-}
-
-IsAutotoolsProject()
-{
-    [ $(ls "${BUILD_DIR}"/*/config.status 2> /dev/null | wc -l) != "0" ] && \
-        return 0 || \
-        return 1
-}
-
-InstallUsualProject()
-{
-    cd "${BUILD_DIR}"
-    for S in *
-    do
-        [ "${S}" = "${STATIC_CODE_ANALYSIS_LOGS_SUBDIR}" ] && continue || true
-
-        cd "${BUILD_DIR}/${S}" || continue
-        make install DESTDIR="../${S}-out" -j1 -i -k &> /dev/null
-        [ ! -d "${BUILD_DIR}/${S}-out" ] && mkdir "${BUILD_DIR}/${S}-out" || true
-        cp -af *.log "${BUILD_DIR}/${S}-out" &> /dev/null
-
-        cd "${BUILD_DIR}"
-        rm -rf "${BUILD_DIR}/${S}" &> /dev/null
-        mv "${BUILD_DIR}/${S}-out" "${BUILD_DIR}/${S}" &> /dev/null
-    done
-}
-
-InstallCmakeProject()
-{
-    InstallUsualProject
-}
-
-InstallAutotoolsProject()
-{
-    InstallUsualProject
-}
-
-InstallQmakeProject()
-{
-    cd "${SOURCES_DIR}/${PROJECT}"
-    build-project clean ${SYSTEMS} &> /dev/null
-
-    cd "${BUILD_DIR}"
-    rm -rf ./*/tmp-sources-dir
-    find . -type f \
-        -name '*mocinclude.opt*' -o \
-        -name '*object_script*' -o \
-        -name '*Makefile*' -o \
-        -name '*.cpp' -o \
-        -name '*.h' | \
-        while read F; do rm -f "${F}"; done
-    find . -type f \
-        -name '*.a' | \
-        while read F; do rm -f "${F}"; done
-    find . -type d \
-        -name '*android-build*' | \
-        while read F; do rm -rf "${F}"; done
-    find . -type f | \
-        grep '.*android_.*\.so' | \
-        while read F; do rm -f "${F}"; done
-    for S in *
-    do
-        [ "${S}" = "${STATIC_CODE_ANALYSIS_LOGS_SUBDIR}" ] && continue || true
-
-        find "${S}" -type f | \
-            while read F; do mv "${F}" "${S}/" 2> /dev/null; done
-    done
-    find . -depth -empty -delete
-}
-
 StartStaticCodeAnalysis()
 {
     cd "${SOURCES_DIR}/${PROJECT}"
@@ -237,19 +155,9 @@ ProcessProject()
 
         cd "${SOURCES_DIR}/${PROJECT}" || exit 1
         build-project ${SYSTEMS} &> /dev/null
-
-        if IsAutotoolsProject
-        then
-            InstallAutotoolsProject
-        elif IsCmakeProject
-        then
-            InstallCmakeProject
-        elif IsQmakeProject
-        then
-            InstallQmakeProject
-        else
-            InstallUsualProject
-        fi
+        build-project install ${SYSTEMS} &> /dev/null
+        build-project delete ${SYSTEMS} &> /dev/null
+        build-project rename ${SYSTEMS} &> /dev/null
 
         StartStaticCodeAnalysis
         EndProjectBuild
