@@ -19,12 +19,14 @@ export ENABLE_CPPCHECK_XML="true"
 export ENABLE_CPPCHECK_HTML="true"
 export CPPCHECK_OPTIONS="-v -f -j${JOBS} --enable=style --suppress=variableScope"
 
-SYSTEMS="i686-w64-mingw32.static
-         x86_64-w64-mingw32.static
-         Ubuntu-14.04-LTS_i386_static
-         Ubuntu-14.04-LTS_amd64_static
-         android_x86
-         android_armv7"
+SYSTEMS="
+        i686-w64-mingw32.static
+        x86_64-w64-mingw32.static
+        Ubuntu-14.04-LTS_i386_static
+        Ubuntu-14.04-LTS_amd64_static
+        android_x86
+        android_armv7
+        "
 
 
 ##### Do not edit lines below! #####

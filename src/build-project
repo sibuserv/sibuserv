@@ -17,11 +17,11 @@ export QT_SERIES="5.7"
 export QT_SDK_DIR="/opt/Qt/qt-current/${QT_SERIES}"
 
 export ANDROID_SDK_ROOT="/opt/android_sdk/android-sdk-linux"
-export ANDROID_NDK_ROOT="/opt/android_ndk/android-ndk-r11c"
+export ANDROID_NDK_ROOT="/opt/android_ndk/android-ndk-r12"
 export ANDROID_NDK_TOOLCHAIN_VERSION="4.9"
 export ANDROID_PLATFORM="android-21"
 
-export JDK="$(ls -d /usr/lib/jvm/java-*-openjdk-* | sort | tail -n1)"
+export JDK="$(ls -d /usr/lib/jvm/java-*-openjdk-* | sort -V | tail -n1)"
 export ANT="/usr/bin/ant"
 
 if [ -z "${SYSTEMS}" ]
