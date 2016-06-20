@@ -1,4 +1,5 @@
 --- TODO ---
+* Add support of git submodules.
 * Add support of spec scripts which will allow users to configure, build and
   install projects in a user defined way.
 * Add examples of qmake-, cmake- and autotools-based projects which could be
