@@ -65,6 +65,7 @@ GetCurrentVersion()
             CURRENT_VER="$(TZ=UTC git show -s --pretty='format:%ad__%h' --date=format-local:'%Y%m%d-%H%M%S')"
         else
             git pull --all &> /dev/null
+            git submodule update --init --recursive &> /dev/null
             if git describe --tags &> /dev/null
             then
                 CURRENT_VER="$(git describe --tags)"

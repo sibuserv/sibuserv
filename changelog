@@ -27,7 +27,9 @@
 * Update GetCurrentVersion():
   - update version format for git projects when there are no git tags
     (--pretty='format:%ad__%h' --date=format-local:'%Y%m%d-%H%M%S')
-  - add support of projects stored in mercurial repos, date and time based
+  - add support of git submodules
+    (`git submodule update --init --recursive` is used)
+  - add support of projects stored in mercurial repos; date and time based
     version format is used
     (-T '{date(date|localdate,"%Y%m%d-%H%M%S")}__{node|short}\n')
   - use date and time based version format for directories which do not use
