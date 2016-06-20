@@ -546,11 +546,11 @@ BuildProject()
 
 InstallQmakeProject()
 {
-    cd "${BUILD_SUB_DIR}" || continue
+    cd "${BUILD_SUB_DIR}" &> /dev/null || continue
     mkdir -p "../${SYSTEM}-out"
     cp -af * "../${SYSTEM}-out/" &> /dev/null
 
-    cd "${BUILD_DIR}/${SYSTEM}-out/" || continue
+    cd "${BUILD_DIR}/${SYSTEM}-out/" &> /dev/null || continue
     make clean &> /dev/null
     rm -rf ./tmp-sources-dir
     rm -rf ./android-build
@@ -581,7 +581,7 @@ InstallQmakeProject()
 
 InstallUsualProject()
 {
-    cd "${BUILD_SUB_DIR}" || continue
+    cd "${BUILD_SUB_DIR}" &> /dev/null || continue
     make install DESTDIR="../${SYSTEM}-out" -j1 -i -k &> /dev/null
     [ ! -d "../${SYSTEM}-out" ] && mkdir "../${SYSTEM}-out" || true
     cp -af *.log "../${SYSTEM}-out" &> /dev/null
