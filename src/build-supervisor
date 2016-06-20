@@ -45,7 +45,7 @@ GetLastBuiltVersion()
 {
     mkdir -p "${BUILD_SERVER_BIN_DIR}/${PROJECT}"
     cd "${BUILD_SERVER_BIN_DIR}/${PROJECT}"
-    BUILD_VER=$(ls 2> /dev/null | sort -V | tail -n1)
+    LAST_BUILT_VER=$(ls 2> /dev/null | sort -V | tail -n1)
 }
 
 GetCurrentVersion()
@@ -149,7 +149,7 @@ ProcessProject()
     GetLastBuiltVersion
     GetCurrentVersion
 
-    if [ "${BUILD_VER}" != "${CURRENT_VER}" ]
+    if [ "${LAST_BUILT_VER}" != "${CURRENT_VER}" ]
     then
         PrepareProjectBuild || continue
         BeginProjectBuild
