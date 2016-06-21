@@ -1,4 +1,4 @@
---- v1.0 (2016-xx-xx) ---
+--- v1.0 (2016-06-22) ---
 *** common ***
 * Update sample of sibuserv config.
 * Only x86_64 systems are supported now. (Google and Digia have decided to
