@@ -43,9 +43,12 @@ done
 
 GetLastBuiltVersion()
 {
-    mkdir -p "${BUILD_SERVER_BIN_DIR}/${PROJECT}"
-    cd "${BUILD_SERVER_BIN_DIR}/${PROJECT}"
-    LAST_BUILT_VER=$(ls 2> /dev/null | sort -V | tail -n1)
+    if cd "${BUILD_SERVER_BIN_DIR}/${PROJECT}" &> /dev/null
+    then
+        LAST_BUILT_VER="$(ls 2> /dev/null | sort -V | tail -n1)"
+    else
+        LAST_BUILT_VER=""
+    fi
 }
 
 GetCurrentVersion()
@@ -92,7 +95,7 @@ PrepareProjectBuild()
     export BUILD_DIR="${BUILD_SERVER_BIN_DIR}/${PROJECT}/${CURRENT_VER}"
     if [ ! -d "${BUILD_DIR}" ]
     then
-        mkdir "${BUILD_DIR}"
+        mkdir -p "${BUILD_DIR}"
     else
         return 1
     fi
