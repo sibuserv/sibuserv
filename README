@@ -15,8 +15,8 @@ autotools-based projects.
 
 Currently supported target systems:
 * different GNU/Linux systems (tested for i486, i586, amd64 and armhf)
-* MS Windows (i686 and x86_64)
-* Android (ARMv7 and x86)
+* MS Windows (tested for i686 and x86_64)
+* Android (tested for ARMv7 and x86)
 And maybe one day Sibuserv will be able to build C++ apps for OS X too.
 
 This project is not self-contained, it depends on few other projects:
