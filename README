@@ -8,8 +8,10 @@ Homepage: https://github.com/tehnick/sibuserv
 Description:
 This project includes collection of tools which allows to setup simple build
 server based on cross-compilation for target systems. This server will be able
-to follow changes in specified svn, git-svn and/or git-repositories and to make
-builds of your qmake-, cmake- and/or autotools-based projects for each commit. 
+to follow changes in specified git, subversion and/or mercurial repositories
+(git-svn and git-remote-hg are supported as well), to make builds and to do
+static code analisys (optionally) for each commit in your qmake-, cmake- and/or
+autotools-based projects.
 
 Currently supported target systems:
 * different GNU/Linux systems (tested for i486, i586, amd64 and armhf)
@@ -30,6 +32,8 @@ Examples of usage (program should be launched in project directory):
   build-project
   build-project AstraLinux-1.2_static
   build-project Ubuntu-14.04-LTS_i386_shared Ubuntu-14.04-LTS_amd64_shared
+  build-project install
+  build-project install x86_64-w64-mingw32.shared
   build-project list
   build-project clean
   build-project clean AstraLinux-1.2_static i686-w64-mingw32.static
