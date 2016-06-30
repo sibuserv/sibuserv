@@ -24,18 +24,28 @@ QT_SDK_ONLINE_INSTALLER_FILE = qt-unified-linux-x64-online.run
 QT_SDK_FOR_ANDROID_URL      = https://download.qt.io/official_releases/qt/$(QT_SERIES)/$(QT_VERSION)/
 QT_SDK_ONLINE_INSTALLER_URL = https://download.qt.io/official_releases/online_installers/
 
-download:
+download: check-system linux windows android
+
+check-system:
 ifneq ($(shell uname -m), x86_64)
 	$(error Unfortunately, Google and Digia have decided to \
 	        discontinue support of Android SDK, NDK and Qt SDK \
 	        for 32-bit Linux based systems. \
 	        So only x86_64 systems are supported now)
 endif
+
+linux:
 	mkdir -p $(CURDIR)/opt
 	cd $(CURDIR)/opt && [ -d lxe ] || \
 		$(GIT) clone https://github.com/tehnick/lxe.git
+
+windows:
+	mkdir -p $(CURDIR)/opt
 	cd $(CURDIR)/opt && [ -d mxe ] || \
 		$(GIT) clone https://github.com/tehnick/mxe.git
+
+android:
+	mkdir -p $(CURDIR)/opt
 	cd $(CURDIR)/opt && [ -e "$(ANDROID_SDK_FILE)" ] || \
 		$(DOWNLOADER) $(ANDROID_SDK_URL)/$(ANDROID_SDK_FILE)
 	cd $(CURDIR)/opt && [ -e "$(ANDROID_NDK_FILE)" ] || \
