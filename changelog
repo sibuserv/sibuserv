@@ -1,8 +1,8 @@
 --- v1.1 (2016-xx-xx) ---
 *** common ***
-* Add 'linux', 'windows' and 'android' targets into Makefile for downloading of
-  LXE, MXE, Android SDK+NDK and Qt SDK accordingly. Default target ('download')
-  use them all sequentially.
+* Add 'linux', 'windows', 'android' and 'qt-sdk' targets into Makefile for
+  downloading of LXE, MXE, Android SDK+NDK and Qt SDK accordingly. Default
+  target ('download') use them all sequentially.
 
 --- v1.0 (2016-06-22) ---
 *** common ***
