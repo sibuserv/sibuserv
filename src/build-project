@@ -338,7 +338,7 @@ UnsetAndroidSpecificVariables()
 
 PrepareBuild()
 {
-    unset CC CXX CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
+    unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
 
     if [ -z "${PROJECT_SRC_DIR}" ]
     then
@@ -376,10 +376,8 @@ PrepareBuild()
     "cmake")
         if [[ "${SYSTEM}" = *mingw* ]]
         then
-            export CONFIGURE_TOOL="$(which cmake)"
-            local  CMAKE_TOOLCHAIN_FILE="${SYSTEM_DIR}/share/cmake/mxe-conf.cmake"
-            export CONFIGURE_OPTIONS="-DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE} \
-                                      -DCMAKE_INSTALL_PREFIX=/usr \
+            export CONFIGURE_TOOL="${SYSTEM}-cmake"
+            export CONFIGURE_OPTIONS="-DCMAKE_INSTALL_PREFIX=/usr \
                                       ${PROJECT_SRC_DIR}"
             export MAKE_TOOL="make"
             export MAKE_OPTIONS="-j${JOBS} -i -k"
@@ -390,14 +388,8 @@ PrepareBuild()
             continue
         else
             . "${LXE_DIR}/etc/${SYSTEM}.sh"
-            export CONFIGURE_TOOL="$(which cmake)"
-            local  CMAKE_TOOLCHAIN_FILE="${SYSTEM_DIR}/sysroot/usr/share/cmake/${SYSTEM}.config.cmake"
-            local  CC=$(ls "${SYSTEM_DIR}/bin/${TARGET}"-gcc-[0-9]* 2> /dev/null | sort -V | tail -n1)
-            local  CXX=$(ls "${SYSTEM_DIR}/bin/${TARGET}"-g++-[0-9]* 2> /dev/null | sort -V | tail -n1)
-            export CONFIGURE_OPTIONS="-DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE} \
-                                      -DCMAKE_INSTALL_PREFIX=/usr \
-                                      -DCMAKE_CXX_COMPILER=${CXX} \
-                                      -DCMAKE_C_COMPILER=${CC} \
+            export CONFIGURE_TOOL=$(ls "${SYSTEM_DIR}/bin/${TARGET}"-gcc-[0-9]*-cmake 2> /dev/null | sort -V | tail -n1)
+            export CONFIGURE_OPTIONS="-DCMAKE_INSTALL_PREFIX=/usr \
                                       ${PROJECT_SRC_DIR}"
             export MAKE_TOOL="make"
             export MAKE_OPTIONS="-j${JOBS} -i -k"

@@ -3,6 +3,8 @@
 * Add 'linux', 'windows', 'android' and 'qt-sdk' targets into Makefile for
   downloading of LXE, MXE, Android SDK+NDK and Qt SDK accordingly. Default
   target ('download') use them all sequentially.
+*** build-project ***
+* Update cmake usage in PrepareBuild() after changes in MXE and LXE.
 
 --- v1.0 (2016-06-22) ---
 *** common ***

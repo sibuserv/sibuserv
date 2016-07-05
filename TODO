@@ -1,5 +1,4 @@
 --- TODO ---
-* Update cmake usage in PrepareBuild() after changes in MXE and LXE.
 * Switch to Clang compiler for Android builds by default.
 * Add support of spec scripts which will allow users to configure, build and
   install projects in a user defined way.
