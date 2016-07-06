@@ -39,11 +39,11 @@ endif
 
 linux: prepare-dir
 	cd $(CURDIR)/opt && [ -d lxe ] || \
-		$(GIT) clone https://github.com/tehnick/lxe.git
+		$(GIT) clone https://github.com/sibuserv/lxe.git
 
 windows: prepare-dir
 	cd $(CURDIR)/opt && [ -d mxe ] || \
-		$(GIT) clone https://github.com/tehnick/mxe.git
+		$(GIT) clone https://github.com/sibuserv/mxe.git
 
 android: prepare-dir
 	cd $(CURDIR)/opt && [ -e "$(ANDROID_SDK_FILE)" ] || \
