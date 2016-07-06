@@ -1,5 +1,8 @@
 --- TODO ---
 * Switch to Clang compiler for Android builds by default.
+* Add 'install-to-android-ndk' (useful for using of extra libraries in android
+  program) and 'install-to-qt-sdk' (useful for modules, plugins and libraries
+  like qtserialport, qsqlmysql, qsqlpsql, qca, qxmpp, etc.).
 * Add support of spec scripts which will allow users to configure, build and
   install projects in a user defined way.
 * Add examples of qmake-, cmake- and autotools-based projects which could be
@@ -9,6 +12,8 @@
 * Add support of static code analysis using Clang Static Analyzer (from host
   system or from QtCreator >= 4.x).
 * Add support of build of cmake-based projects for Android.
+? Add cmake toolchain files for Android and/or scripts for simplifying build of
+  programs which depend on extra libraries.
 ? Add support of sending email messages when build of project is failed.
 ? Add support of build for Ubuntu Touch.
 ? Add support of build for OS X.
