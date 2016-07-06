@@ -3,7 +3,7 @@ Sibuserv -- Simple Build Server
 Copyright: 2015-2016 Boris Pek <tehnick-8@mail.ru>
 License: Expat
 
-Homepage: https://github.com/tehnick/sibuserv
+Homepage: https://github.com/sibuserv/sibuserv
 
 Description:
 This project includes collection of tools which allows to setup simple build
@@ -49,8 +49,8 @@ Other tools (may be launched from any directory):
   build-server-daemon &
 
 Useful links:
-  https://github.com/tehnick/lxe
-  https://github.com/tehnick/mxe
+  https://github.com/sibuserv/lxe
+  https://github.com/sibuserv/mxe
   http://mxe.cc/
 
 Important notes:
