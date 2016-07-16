@@ -8,7 +8,7 @@
 * Change target names scheme for Android builds:
   android-<Android API level>_<target architecture>
   ANDROID_PLATFORM variable from config files will be ignored, because it is
-  specified in SYSTEMS variable now.
+  specified in SYSTEM variable now.
 * Change Android application package names scheme:
   <Project name>_android-<Android API level>_<target architecture>.apk
 
