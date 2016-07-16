@@ -24,8 +24,8 @@ export SYSTEMS="
                 x86_64-w64-mingw32.static
                 Ubuntu-14.04-LTS_i386_static
                 Ubuntu-14.04-LTS_amd64_static
-                android_x86
-                android_armv7
+                android-21_x86
+                android-21_arm
                "
 
 

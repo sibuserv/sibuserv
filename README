@@ -40,7 +40,7 @@ Examples of usage (program should be launched in project directory):
   build-project distclean
   build-project distclean x86_64-w64-mingw32.static
   build-project delete
-  build-project delete android_x86 android_armv7
+  build-project delete android-21_x86 android-21_arm
   build-project --version
   build-project --help
 

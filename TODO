@@ -7,8 +7,6 @@
   install projects in a user defined way.
 * Add examples of qmake-, cmake- and autotools-based projects which could be
   built for GNU/Linux, MS Windows and Android.
-* Add ability of a build for a number of android platforms defined in SYSTEMS
-  variable by its name: android-<Android API level>_<target architecture>.
 * Add support of static code analysis using Clang Static Analyzer (from host
   system or from QtCreator >= 4.x).
 * Add support of build of cmake-based projects for Android.

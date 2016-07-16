@@ -5,6 +5,12 @@
   target ('download') use them all sequentially.
 *** build-project ***
 * Update cmake usage in PrepareBuild() after changes in MXE and LXE.
+* Change target names scheme for Android builds:
+  android-<Android API level>_<target architecture>
+  ANDROID_PLATFORM variable from config files will be ignored, because it is
+  specified in SYSTEMS variable now.
+* Change Android application package names scheme:
+  <Project name>_android-<Android API level>_<target architecture>.apk
 
 --- v1.0 (2016-06-22) ---
 *** common ***
