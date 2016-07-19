@@ -3,6 +3,7 @@
 * Add 'linux', 'windows', 'android' and 'qt-sdk' targets into Makefile for
   downloading of LXE, MXE, Android SDK+NDK and Qt SDK accordingly. Default
   target ('download') use them all sequentially.
+* Update Android NDK version from r12 to r12b.
 *** build-project ***
 * Update cmake usage in PrepareBuild() after changes in MXE and LXE.
 * Change target names scheme for Android builds:
