@@ -135,9 +135,8 @@ then
         for PLATFORM in *android-[0-9]*
         do
             ANDROID_API_VER="$(echo ${PLATFORM} | tr -d android-)"
-            # Android API levels less than 16 are not supported by
-            # androiddeployqt from Qt >= 5.7:
-            # "Invalid minSdkVersion version, minSdkVersion must be >= 16"
+            # Android API levels less than 16 are not supported by Qt >= 5.7:
+            # http://doc-snapshots.qt.io/qt5-5.7/android-support.html
             [ "${ANDROID_API_VER}" -lt "16" ] && continue || true
             cd "${ANDROID_NDK_ROOT}/platforms/${PLATFORM}" || continue
             # Supported targets:
