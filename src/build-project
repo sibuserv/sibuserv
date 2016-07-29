@@ -565,6 +565,7 @@ InstallQmakeProject()
     find . -type f \
         -name '*mocinclude.opt*' -o \
         -name '*object_script*' -o \
+        -name '*.qmake.stash*' -o \
         -name '*Makefile*' -o \
         -name '*.cpp' -o \
         -name '*.h' | \

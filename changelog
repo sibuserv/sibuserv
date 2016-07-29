@@ -5,6 +5,7 @@
   target ('download') use them all sequentially.
 * Update Android NDK version from r12 to r12b.
 *** build-project ***
+* Update InstallQmakeProject() for Qt >= 5.7.
 * Update cmake usage in PrepareBuild() after changes in MXE and LXE.
 * Change target names scheme for Android builds:
   android-<Android API level>_<target architecture>
