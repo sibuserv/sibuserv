@@ -1,7 +1,4 @@
 --- TODO ---
-* Add 'install-to-android-ndk' (useful for using of extra libraries in android
-  program) and 'install-to-qt-sdk' (useful for modules, plugins and libraries
-  like qtserialport, qsqlmysql, qsqlpsql, qca, qxmpp, etc.).
 * Add support of spec scripts which will allow users to configure, build and
   install projects in a user defined way.
 * Add examples of qmake-, cmake- and autotools-based projects which could be

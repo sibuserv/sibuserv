@@ -47,7 +47,9 @@ done
 
 IsOption()
 {
-    for OPT in install clean distclean delete rename -V --version -h --help
+    for OPT in install clean distclean delete rename \
+            install-to-android-ndk install-to-qt-sdk \
+            -V --version -h --help
     do
         [ "${1}" = "${OPT}" ] && return 0
     done
@@ -89,6 +91,13 @@ Options:
     delete          delete sub-directories (\`rm -rf\` for all specified systems)
     -V, --version   display LXE version and exit
     -h, --help      display this help and exit
+
+Extra options:
+    install-to-android-ndk  installation of already built project into Android NDK
+                            (useful for using of extra libraries in android program)
+    install-to-qt-sdk       installation of already built project into Qt SDK
+                            (useful for modules, plugins and libraries like
+                            qtserialport, qsqlmysql, qsqlpsql, qca, qxmpp, etc.)
 
 Examples:
     build-project
@@ -634,6 +643,14 @@ do
     if [ "${1}" = "install" ]
     then
         InstallProject
+    elif [ "${1}" = "install-to-android-ndk" ]
+    then
+        if [[ "${SYSTEM}" = *android* ]]
+        then
+            InstallProject
+            cp -af "../${SYSTEM}-out"/* "${SYSTEM_DIR}" &> /dev/null
+            rm -f  "${SYSTEM_DIR}"/*.log
+        fi
     else
         PrepareBuild
         BeginBuild

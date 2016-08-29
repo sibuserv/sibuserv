@@ -13,6 +13,9 @@
   specified in SYSTEM variable now.
 * Change Android application package names scheme:
   <Project name>_android-<Android API level>_<target architecture>.apk
+* Add 'install-to-android-ndk' (useful for using of extra libraries in android
+  program) and 'install-to-qt-sdk' (useful for modules, plugins and libraries
+  like qtserialport, qsqlmysql, qsqlpsql, qca, qxmpp, etc.).
 
 --- v1.0 (2016-06-22) ---
 *** common ***
