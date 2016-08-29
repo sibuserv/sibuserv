@@ -476,9 +476,9 @@ BuildAndroidPackage()
     local ANDROID_SETTINGS_FILE="$(find . -type f -name '*.so-deployment-settings.json' | head -n1)"
     if [ ! -z "${ANDROID_SETTINGS_FILE}" ]
     then
-        local ANDROID_BUILD_DIR="./android-build"
+        local ANDROID_BUILD_DIR="${BUILD_SUB_DIR}/android-build"
 
-        if ! IsAndroidDeployQtSafePath "${BUILD_SUB_DIR}/android-build"
+        if ! IsAndroidDeployQtSafePath "${ANDROID_BUILD_DIR}"
         then
             if IsAvailableDiskSpaceEnough "." "/tmp"
             then
@@ -510,7 +510,7 @@ BuildAndroidPackage()
         #    --sign 'example' \
         #    --storepass '123456' \
 
-        if ! IsAndroidDeployQtSafePath "${BUILD_SUB_DIR}/android-build"
+        if ! IsAndroidDeployQtSafePath "${ANDROID_BUILD_DIR}"
         then
             if [[ "${TMP_DIR}" = *tmp/sibuserv_* ]]
             then
