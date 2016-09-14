@@ -579,9 +579,6 @@ InstallQmakeProject()
         -name '*.cpp' -o \
         -name '*.h' | \
         while read F; do rm -f "${F}"; done
-    find . -type f \
-        -name '*.a' | \
-        while read F; do rm -f "${F}"; done
 
     if [[ "${SYSTEM}" = *android* ]]
     then
@@ -595,6 +592,15 @@ InstallQmakeProject()
     find . -type f | \
         while read F; do mv "${F}" "./" 2> /dev/null; done
     find . -depth -empty -delete
+
+    # Delete static libraries only if there are other files besides them
+    if [ "$(ls *.a 2> /dev/null | wc -l)" != "$(ls * 2> /dev/null | grep -v '\.log$' | wc -l)" ]
+    then
+        rm -f *.a
+        find . -type f \
+            -name '*.a' | \
+            while read F; do rm -f "${F}"; done
+    fi
 }
 
 InstallUsualProject()
@@ -647,6 +653,8 @@ do
     then
         if [[ "${SYSTEM}" = *android* ]]
         then
+            # Tested for: ffmpeg, sdl2
+            # (with custom configure scripts)
             InstallProject
             cp -af "../${SYSTEM}-out"/* "${SYSTEM_DIR}" &> /dev/null
             rm -f  "${SYSTEM_DIR}"/*.log
