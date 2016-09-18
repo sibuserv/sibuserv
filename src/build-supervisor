@@ -154,7 +154,7 @@ ProcessProject()
 
     if [ "${LAST_BUILT_VER}" != "${CURRENT_VER}" ]
     then
-        PrepareProjectBuild || continue
+        PrepareProjectBuild || return 0
         BeginProjectBuild
 
         cd "${SOURCES_DIR}/${PROJECT}" || exit 1
