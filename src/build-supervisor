@@ -143,6 +143,7 @@ StartStaticCodeAnalysis()
     then
         HTML_DIR="${STATIC_CODE_ANALYSIS_LOGS_DIR}/cppcheck.html"
         cppcheck-htmlreport --source-dir=. --report-dir="${HTML_DIR}" --file="${XML_FILE}" \
+                            --title="${PROJECT} - ${CURRENT_VER}" \
                             &> "${STATIC_CODE_ANALYSIS_LOGS_DIR}/cppcheck.html.log"
     fi
 }
