@@ -48,7 +48,7 @@ done
 IsOption()
 {
     for OPT in install clean distclean delete rename \
-            install-to-android-ndk install-to-qt-sdk \
+            install-to-sysroot install-to-qt-sdk \
             -V --version -h --help
     do
         [ "${1}" = "${OPT}" ] && return 0
@@ -93,8 +93,9 @@ Options:
     -h, --help      display this help and exit
 
 Extra options:
-    install-to-android-ndk  installation of already built project into Android NDK
-                            (useful for using of extra libraries in android program)
+    install-to-sysroot      installation of already built project into sysroot
+                            (useful for using of extra libraries in android program;
+                            it midth be used for non-android target systems too)
     install-to-qt-sdk       installation of already built project into Qt SDK
                             (useful for modules, plugins and libraries like
                             qtserialport, qsqlmysql, qsqlpsql, qca, qxmpp, etc.)
@@ -224,9 +225,10 @@ DefinePaths()
         export ARCH="$(echo ${SYSTEM} | sed -ne 's|^android-[0-9]*_\(.*\)|\1|p')"
         export SYSTEM_DIR="${ANDROID_NDK_ROOT}/platforms/${ANDROID_PLATFORM}/arch-${ARCH}"
     else
-        export SYSTEM_DIR="${LXE_DIR}/dist/${SYSTEM}"
+        export SYSTEM_DIR="${LXE_DIR}/dist/${SYSTEM}/sysroot"
     fi
     export BUILD_SUB_DIR="${BUILD_DIR}/${SYSTEM}"
+    export LOG_FILE="${BUILD_SUB_DIR}/build.log"
 }
 
 CheckSystem()
@@ -234,7 +236,7 @@ CheckSystem()
     if [ ! -d "${SYSTEM_DIR}" ]
     then
         echo "System ${SYSTEM_DIR} does not exist!"
-        continue
+        return 1
     fi
 }
 
@@ -308,15 +310,20 @@ DetectBuildAutomationSystemType()
     fi
 }
 
-BeginBuild()
+BeginBuildInfo()
 {
-    echo "[system]   ${SYSTEM_DIR}"
-    echo "[build]    ${BUILD_SUB_DIR}"
+    echo "[system]    ${SYSTEM_DIR}"
+    echo "[build]     ${BUILD_SUB_DIR}"
 }
 
-EndBuild()
+EndBuildInfo()
 {
-    echo "[done]     ${BUILD_SUB_DIR}"
+    echo "[done]      ${BUILD_SUB_DIR}"
+}
+
+InstallationInfo()
+{
+    echo "[install]   ${@}"
 }
 
 SetAndroidSpecificVariables()
@@ -390,11 +397,11 @@ PrepareBuild()
             export PATH="${QT_SDK_DIR}/${TARGET_QT_SDK_NAME}/bin:${PATH}"
             UnsetAndroidSpecificVariables
         else
-            export CONFIGURE_TOOL="${SYSTEM_DIR}/sysroot/qt5/bin/qmake"
+            export CONFIGURE_TOOL="${SYSTEM_DIR}/qt5/bin/qmake"
             export CONFIGURE_OPTIONS="-r -spec linux-g++-${SYSTEM} ${PROJECT_FILE}"
             export MAKE_TOOL="make"
             export MAKE_OPTIONS="-j${JOBS} -i -k"
-            export PATH="${SYSTEM_DIR}/bin:${SYSTEM_DIR}/sysroot/qt5/bin:${ORIG_PATH}"
+            export PATH="${LXE_DIR}/dist/${SYSTEM}/bin:${SYSTEM_DIR}/qt5/bin:${ORIG_PATH}"
         fi
     ;;
     "cmake")
@@ -409,15 +416,15 @@ PrepareBuild()
         elif [[ "${SYSTEM}" = *android* ]]
         then
             echo "Build of cmake-based projects for Android is not supported yet."
-            continue
+            return 1
         else
             . "${LXE_DIR}/etc/${SYSTEM}.sh"
-            export CONFIGURE_TOOL=$(ls "${SYSTEM_DIR}/bin/${TARGET}"-gcc-[0-9]*-cmake 2> /dev/null | sort -V | tail -n1)
+            export CONFIGURE_TOOL=$(ls "${LXE_DIR}/dist/${SYSTEM}/bin/${TARGET}"-gcc-[0-9]*-cmake 2> /dev/null | sort -V | tail -n1)
             export CONFIGURE_OPTIONS="-DCMAKE_INSTALL_PREFIX=/usr \
                                       ${PROJECT_SRC_DIR}"
             export MAKE_TOOL="make"
             export MAKE_OPTIONS="-j${JOBS} -i -k"
-            export PATH="${SYSTEM_DIR}/bin:${SYSTEM_DIR}/sysroot/qt5/bin:${ORIG_PATH}"
+            export PATH="${LXE_DIR}/dist/${SYSTEM}/bin:${SYSTEM_DIR}/qt5/bin:${ORIG_PATH}"
         fi
     ;;
     "autotools")
@@ -458,7 +465,7 @@ PrepareBuild()
             export CONFIGURE_OPTIONS="--target=${TARGET} --host=${TARGET} --prefix=/usr"
             export MAKE_TOOL="make"
             export MAKE_OPTIONS="-j${JOBS} -i -k"
-            export PATH="${SYSTEM_DIR}/bin:${SYSTEM_DIR}/sysroot/qt5/bin:${ORIG_PATH}"
+            export PATH="${LXE_DIR}/dist/${SYSTEM}/bin:${SYSTEM_DIR}/qt5/bin:${ORIG_PATH}"
         fi
     ;;
     esac
@@ -539,7 +546,6 @@ BuildAndroidPackage()
 
 BuildProject()
 {
-    local LOG_FILE="${BUILD_SUB_DIR}/build.log"
     rm -rf "${LOG_FILE}"
 
     mkdir -p "${BUILD_SUB_DIR}"
@@ -563,11 +569,11 @@ BuildProject()
 
 InstallQmakeProject()
 {
-    cd "${BUILD_SUB_DIR}" &> /dev/null || continue
+    cd "${BUILD_SUB_DIR}" || return 1
     mkdir -p "../${SYSTEM}-out"
     cp -af * "../${SYSTEM}-out/" &> /dev/null
 
-    cd "${BUILD_DIR}/${SYSTEM}-out/" &> /dev/null || continue
+    cd "${BUILD_DIR}/${SYSTEM}-out/" || return 1
     make clean &> /dev/null
     rm -rf ./tmp-sources-dir
     rm -rf ./android-build
@@ -605,35 +611,79 @@ InstallQmakeProject()
 
 InstallUsualProject()
 {
-    cd "${BUILD_SUB_DIR}" &> /dev/null || continue
-    make install DESTDIR="../${SYSTEM}-out" -j1 -i -k &> /dev/null
+    cd "${BUILD_SUB_DIR}" || return 1
+
+    echo >> "${LOG_FILE}" && echo >> "${LOG_FILE}" && echo >> "${LOG_FILE}"
+
+    make install DESTDIR="../${SYSTEM}-out" -j1 -i -k &>> "${LOG_FILE}"
     [ ! -d "../${SYSTEM}-out" ] && mkdir "../${SYSTEM}-out" || true
     cp -af *.log "../${SYSTEM}-out" &> /dev/null
 }
 
 InstallCmakeProject()
 {
-    InstallUsualProject
+    InstallUsualProject || return 1
 }
 
 InstallAutotoolsProject()
 {
-    InstallUsualProject
+    InstallUsualProject || return 1
 }
 
 InstallProject()
 {
+    InstallationInfo "${BUILD_SUB_DIR}-out"
+
     case "${BUILD_SYSTEM_TYPE}" in
     "qmake")
-        InstallQmakeProject
+        InstallQmakeProject || return 1
     ;;
     "cmake")
-        InstallCmakeProject
+        InstallCmakeProject || return 1
     ;;
     "autotools")
-        InstallAutotoolsProject
+        InstallAutotoolsProject || return 1
     ;;
     esac
+}
+
+InstallToSysroot()
+{
+    InstallProject || return 1
+    InstallationInfo "${SYSTEM_DIR}"
+    echo >> "${LOG_FILE}" && echo >> "${LOG_FILE}" && echo >> "${LOG_FILE}"
+    cp -afv "../${SYSTEM}-out"/* "${SYSTEM_DIR}" &>> "${LOG_FILE}"
+    rm -f  "${SYSTEM_DIR}"/*.log
+}
+
+InstallToQtSDK()
+{
+    local QT_SDK_INSTALL_DIR="${SYSTEM_DIR}/qt5"
+    if [[ "${SYSTEM}" = *android* ]]
+    then
+        SetAndroidSpecificVariables
+        QT_SDK_INSTALL_DIR="${QT_SDK_DIR}/${TARGET_QT_SDK_NAME}"
+        UnsetAndroidSpecificVariables
+    fi
+
+    if [ "${BUILD_SYSTEM_TYPE}" = "qmake" ]
+    then
+        # Tested for: qtserialport
+        cd "${BUILD_SUB_DIR}" || return 1
+        if [ "$(grep ^install: Makefile | wc -l)" != "0" ]
+        then
+            InstallationInfo "${QT_SDK_INSTALL_DIR}"
+            echo >> "${LOG_FILE}" && echo >> "${LOG_FILE}" && echo >> "${LOG_FILE}"
+            make install -j1 -k &>> "${LOG_FILE}"
+            return 0
+        fi
+    fi
+
+    InstallProject || return 1
+    InstallationInfo "${QT_SDK_INSTALL_DIR}"
+    echo >> "${LOG_FILE}" && echo >> "${LOG_FILE}" && echo >> "${LOG_FILE}"
+    cp -afv "../${SYSTEM}-out"/* "${QT_SDK_INSTALL_DIR}" &>> "${LOG_FILE}"
+    rm -f  "${QT_SDK_INSTALL_DIR}"/*.log
 }
 
 ##### Script body #####
@@ -644,26 +694,22 @@ do
     export SYSTEM
 
     DefinePaths
-    CheckSystem
+    CheckSystem || continue
 
     if [ "${1}" = "install" ]
     then
         InstallProject
-    elif [ "${1}" = "install-to-android-ndk" ]
+    elif [ "${1}" = "install-to-sysroot" ]
     then
-        if [[ "${SYSTEM}" = *android* ]]
-        then
-            # Tested for: ffmpeg, sdl2
-            # (with custom configure scripts)
-            InstallProject
-            cp -af "../${SYSTEM}-out"/* "${SYSTEM_DIR}" &> /dev/null
-            rm -f  "${SYSTEM_DIR}"/*.log
-        fi
+        InstallToSysroot
+    elif [ "${1}" = "install-to-qt-sdk" ]
+    then
+        InstallToQtSDK
     else
-        PrepareBuild
-        BeginBuild
+        PrepareBuild || continue
+        BeginBuildInfo
         BuildProject
-        EndBuild
+        EndBuildInfo
     fi
 done
 
