@@ -134,7 +134,7 @@ StartStaticCodeAnalysis()
        [ $(which cppcheck | wc -l) = "1" ]
     then
         XML_FILE="${STATIC_CODE_ANALYSIS_LOGS_DIR}/cppcheck.xml"
-        cppcheck -q ${CPPCHECK_OPTIONS} --xml . &> "${XML_FILE}"
+        cppcheck -q ${CPPCHECK_OPTIONS} --xml --xml-version=2 . &> "${XML_FILE}"
     fi
     if [ "${ENABLE_CPPCHECK_HTML}" = "true" ] && \
        [ "${ENABLE_CPPCHECK_XML}"  = "true" ] && \
