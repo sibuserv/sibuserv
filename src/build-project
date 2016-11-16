@@ -312,12 +312,14 @@ DetectBuildAutomationSystemType()
 
 BeginBuildInfo()
 {
+    echo "$(date +"[%Y-%m-%d %H:%M:%S]") start of build" &>> "${LOG_FILE}"
     echo "[system]    ${SYSTEM_DIR}"
     echo "[build]     ${BUILD_SUB_DIR}"
 }
 
 EndBuildInfo()
 {
+    echo "$(date +"[%Y-%m-%d %H:%M:%S]") end of build" &>> "${LOG_FILE}"
     echo "[done]      ${BUILD_SUB_DIR}"
 }
 
@@ -469,6 +471,9 @@ PrepareBuild()
         fi
     ;;
     esac
+
+    mkdir -p "${BUILD_SUB_DIR}"
+    rm -rf "${LOG_FILE}"
 }
 
 IsAvailableDiskSpaceEnough()
@@ -546,9 +551,6 @@ BuildAndroidPackage()
 
 BuildProject()
 {
-    rm -rf "${LOG_FILE}"
-
-    mkdir -p "${BUILD_SUB_DIR}"
     cd "${BUILD_SUB_DIR}" || exit 1
 
     if ! IsSafePath "${PROJECT_DIR}"
