@@ -10,7 +10,7 @@
 ? Add cmake toolchain files for Android and/or scripts for simplifying build of
   programs which depend on extra libraries.
 ? Add support of sending email messages when build of project is failed.
-? Add support of packaging into Appimage packages (http://appimage.org/).
+? Add support of packaging into Appimage packages (https://appimage.org/).
 ? Add support of packaging into Flatpak packages (http://flatpak.org/).
-? Add support of build for Ubuntu Touch.
-? Add support of build for OS X.
+? Add support of packaging into Snap packages (http://snapcraft.io/).
+? Add support of build for macOS.
