@@ -1,7 +1,7 @@
 Sibuserv -- Simple Build Server
 
-Copyright: 2015-2016 Boris Pek <tehnick-8@mail.ru>
-License: Expat
+Copyright: 2015-2016 Boris Pek <tehnick-8@yandex.ru>
+License: MIT (Expat)
 
 Homepage: https://github.com/sibuserv/sibuserv
 
@@ -17,13 +17,19 @@ Currently supported target systems:
 * different GNU/Linux systems (tested for i486, i586, amd64 and armhf)
 * MS Windows (tested for i686 and x86_64)
 * Android (tested for ARMv7 and x86)
-And maybe one day Sibuserv will be able to build C++ apps for OS X too.
+And maybe one day Sibuserv will be able to build C++ apps for macOS too.
 
 This project is not self-contained, it depends on few other projects:
 * LXE -- Linux cross-toolchain environment
 * MXE -- M cross environment (for MS Windows)
 * official Android SDK and NDK
 * official Qt SDK (for Android)
+
+There is special Sibuserv Web UI which allows to browse build results and
+distribute assembled executables among authorized users (with delimitation of
+access rights, etc.). Its usage is convenient but is not mandatory. You may
+provide access to build results via Samba, any FTP or HTTP server, using one
+of file hosting services and so on.
 
 Dependencies:
 bash, realpath, pkg-config, make, cmake, patch, sed, find, cppcheck
@@ -49,9 +55,10 @@ Other tools (may be launched from any directory):
   build-server-daemon &
 
 Useful links:
-  https://github.com/sibuserv/lxe
-  https://github.com/sibuserv/mxe
   http://mxe.cc/
+  https://github.com/sibuserv/mxe
+  https://github.com/sibuserv/lxe
+  https://github.com/sibuserv/sibuserv-webui
 
 Important notes:
 If you want to distribute statically linked binaries, you have to check the
