@@ -1,3 +1,7 @@
+--- v1.2 (2017-xx-xx) ---
+*** common ***
+* Update Qt SDK version from 5.7.0 to 5.7.1.
+
 --- v1.1 (2016-11-19) ---
 *** common ***
 * Add 'linux', 'windows', 'android' and 'qt-sdk' targets into Makefile for

@@ -6,7 +6,7 @@ ANDROID_SDK_VERSION = r24.4.1
 ANDROID_NDK_VERSION = r12b
 
 QT_SERIES=5.7
-QT_VERSION=5.7.0
+QT_VERSION=5.7.1
 
 # https://developer.android.com/studio/index.html#downloads
 # https://developer.android.com/ndk/downloads/index.html
