@@ -1,6 +1,9 @@
 --- v1.2 (2017-xx-xx) ---
 *** common ***
 * Update Qt SDK version from 5.7.0 to 5.7.1.
+* Update Android SDK version from r24.4.1 to r25.2.3.
+* Update Android NDK version from r12b to r13b.
+* Unpack Android SDK and NDK after downloading using `unzip` tool.
 
 --- v1.1 (2016-11-19) ---
 *** common ***

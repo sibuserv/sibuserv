@@ -1,9 +1,10 @@
 DESTDIR = /usr
 DOWNLOADER = wget
+UNZIP = unzip
 GIT = git
 
-ANDROID_SDK_VERSION = r24.4.1
-ANDROID_NDK_VERSION = r12b
+ANDROID_SDK_VERSION = r25.2.3
+ANDROID_NDK_VERSION = r13b
 
 QT_SERIES=5.7
 QT_VERSION=5.7.1
@@ -12,10 +13,10 @@ QT_VERSION=5.7.1
 # https://developer.android.com/ndk/downloads/index.html
 # https://download.qt.io/official_releases/qt/
 
-ANDROID_SDK_FILE = android-sdk_$(ANDROID_SDK_VERSION)-linux.tgz
+ANDROID_SDK_FILE = tools_$(ANDROID_SDK_VERSION)-linux.zip
 ANDROID_NDK_FILE = android-ndk-$(ANDROID_NDK_VERSION)-linux-x86_64.zip
 
-ANDROID_SDK_URL = https://dl.google.com/android
+ANDROID_SDK_URL = https://dl.google.com/android/repository/
 ANDROID_NDK_URL = https://dl.google.com/android/repository/
 
 QT_SDK_FOR_ANDROID_FILE      = qt-opensource-linux-x64-android-$(QT_VERSION).run
@@ -50,6 +51,10 @@ android: prepare-dir
 		$(DOWNLOADER) $(ANDROID_SDK_URL)/$(ANDROID_SDK_FILE)
 	cd $(CURDIR)/opt && [ -e "$(ANDROID_NDK_FILE)" ] || \
 		$(DOWNLOADER) $(ANDROID_NDK_URL)/$(ANDROID_NDK_FILE)
+	cd $(CURDIR)/opt && [ -d "android-sdk-linux" ] || \
+		$(UNZIP) $(ANDROID_SDK_FILE) -d "android-sdk-linux" > /dev/null
+	cd $(CURDIR)/opt && [ -d "android-ndk-$(ANDROID_NDK_VERSION)" ] || \
+		$(UNZIP) "$(ANDROID_NDK_FILE)" > /dev/null
 
 qt-sdk: prepare-dir
 	cd $(CURDIR)/opt && [ -e "$(QT_SDK_FOR_ANDROID_FILE)" ] || \
