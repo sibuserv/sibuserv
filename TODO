@@ -9,6 +9,7 @@
 ? Switch to Clang compiler for Android builds by default.
 ? Add cmake toolchain files for Android and/or scripts for simplifying build of
   programs which depend on extra libraries.
+? Add support of static code analysis using PVS-Studio.
 ? Add support of sending email messages when build of project is failed.
 ? Add support of packaging into Appimage packages (https://appimage.org/).
 ? Add support of packaging into Flatpak packages (http://flatpak.org/).
