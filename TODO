@@ -5,7 +5,6 @@
   built for GNU/Linux, MS Windows and Android.
 * Add support of static code analysis using Clang Static Analyzer (from host
   system or from QtCreator >= 4.x).
-* Add support of build of cmake-based projects for Android.
 ? Switch to Clang compiler for Android builds by default.
 ? Add cmake toolchain files for Android and/or scripts for simplifying build of
   programs which depend on extra libraries.

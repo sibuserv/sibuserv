@@ -4,6 +4,8 @@
 * Update Android SDK version from r24.4.1 to r25.2.3.
 * Update Android NDK version from r12b to r13b.
 * Unpack Android SDK and NDK after downloading using `unzip` tool.
+*** build-project ***
+* Add support of build of cmake-based projects for Android.
 
 --- v1.1 (2016-11-19) ---
 *** common ***

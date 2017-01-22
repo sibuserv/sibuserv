@@ -8,7 +8,7 @@ export PROJECT_DIR="$(realpath -s .)"
 ##### Default settings #####
 
 # Number of compilation processes:
-[ -z "${JOBS}" ] && export JOBS=4
+[ -z "${JOBS}" ] && export JOBS=$(nproc 2>/dev/null || echo 1)
 
 export LXE_DIR="/opt/lxe"
 export MXE_DIR="/opt/mxe"
@@ -394,8 +394,6 @@ PrepareBuild()
             export MAKE_TOOL="make"
             export MAKE_OPTIONS="-j${JOBS} -i -k"
             export PATH="${ORIG_PATH}"
-            # export PATH="${ANDROID_SDK_ROOT}/tools:${PATH}"
-            # export PATH="${ANDROID_SDK_ROOT}/platform-tools:${PATH}"
             export PATH="${QT_SDK_DIR}/${TARGET_QT_SDK_NAME}/bin:${PATH}"
             UnsetAndroidSpecificVariables
         else
@@ -417,8 +415,20 @@ PrepareBuild()
             export PATH="${MXE_DIR}/usr/bin:${SYSTEM_DIR}/qt5/bin:${ORIG_PATH}"
         elif [[ "${SYSTEM}" = *android* ]]
         then
-            echo "Build of cmake-based projects for Android is not supported yet."
-            return 1
+            SetAndroidSpecificVariables
+            local TOOLCHAIN_FILE="${ANDROID_NDK_ROOT}/build/cmake/android.toolchain.cmake"
+            local TARGET_SPECIAL_NAME_NAME="${TARGET_SPECIAL_NAME}-${ANDROID_NDK_TOOLCHAIN_VERSION}"
+            export CONFIGURE_TOOL="cmake"
+            export CONFIGURE_OPTIONS="-DCMAKE_TOOLCHAIN_FILE=${TOOLCHAIN_FILE} \
+                                      -DCMAKE_INSTALL_PREFIX=/usr \
+                                      -DTARGET_SPECIAL_NAME_NAME=${TARGET_SPECIAL_NAME_NAME} \
+                                      -DANDROID_PLATFORM=${ANDROID_PLATFORM} \
+                                      ${PROJECT_SRC_DIR}"
+            export MAKE_TOOL="make"
+            export MAKE_OPTIONS="-j${JOBS} -i -k"
+            export PATH="${ORIG_PATH}"
+            export PATH="${QT_SDK_DIR}/${TARGET_QT_SDK_NAME}/bin:${PATH}"
+            UnsetAndroidSpecificVariables
         else
             . "${LXE_DIR}/etc/${SYSTEM}.sh"
             export CONFIGURE_TOOL=$(ls "${LXE_DIR}/dist/${SYSTEM}/bin/${TARGET}"-gcc-[0-9]*-cmake 2> /dev/null | sort -V | tail -n1)
