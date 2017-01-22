@@ -332,18 +332,25 @@ SetAndroidSpecificVariables()
 {
     # target
     if   [ "${ARCH}" = "arm" ] ; then
+        export ANDROID_ABI="armeabi-v7a"
         export TARGET="arm-linux-androideabi"
     elif [ "${ARCH}" = "arm64" ] ; then
+        export ANDROID_ABI="arm64-v8a"
         export TARGET="aarch64-linux-android"
     elif [ "${ARCH}" = "mips" ] ; then
+        export ANDROID_ABI="mips"
         export TARGET="mipsel-linux-android"
     elif [ "${ARCH}" = "mips64" ] ; then
+        export ANDROID_ABI="mips64"
         export TARGET="mips64el-linux-android"
     elif [ "${ARCH}" = "x86" ] ; then
+        export ANDROID_ABI="x86"
         export TARGET="i686-linux-android"
     elif [ "${ARCH}" = "x86_64" ] ; then
+        export ANDROID_ABI="x86_64"
         export TARGET="x86_64-linux-android"
     else
+        export ANDROID_ABI="${ARCH}"
         export TARGET="${ARCH}"
     fi
     # dirty fix because of irrational Android NDK developers
@@ -417,11 +424,11 @@ PrepareBuild()
         then
             SetAndroidSpecificVariables
             local TOOLCHAIN_FILE="${ANDROID_NDK_ROOT}/build/cmake/android.toolchain.cmake"
-            local TARGET_SPECIAL_NAME_NAME="${TARGET_SPECIAL_NAME}-${ANDROID_NDK_TOOLCHAIN_VERSION}"
             export CONFIGURE_TOOL="cmake"
             export CONFIGURE_OPTIONS="-DCMAKE_TOOLCHAIN_FILE=${TOOLCHAIN_FILE} \
                                       -DCMAKE_INSTALL_PREFIX=/usr \
-                                      -DTARGET_SPECIAL_NAME_NAME=${TARGET_SPECIAL_NAME_NAME} \
+                                      -DANDROID_TOOLCHAIN=gcc \
+                                      -DANDROID_ABI=${ANDROID_ABI} \
                                       -DANDROID_PLATFORM=${ANDROID_PLATFORM} \
                                       ${PROJECT_SRC_DIR}"
             export MAKE_TOOL="make"
