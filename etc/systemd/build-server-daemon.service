@@ -1,5 +1,6 @@
 [Unit]
 Description=Simple Build Server Daemon
+Documentation=https://github.com/sibuserv/sibuserv/blob/master/INSTALL
 After=network.target
 
 [Service]
