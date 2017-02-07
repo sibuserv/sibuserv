@@ -17,6 +17,7 @@
 * hg        (optional)
 * ant       (optional)
 * jdk       (optional)
+* firejail  (optional)
 
 
 ===== Configuration options =====

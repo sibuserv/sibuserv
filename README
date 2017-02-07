@@ -1,4 +1,4 @@
-Sibuserv -- Simple Build Server
+Sibuserv – Simple Build Server
 
 Copyright: 2015-2017 Boris Pek <tehnick-8@yandex.ru>
 License: MIT (Expat)
@@ -20,8 +20,8 @@ Currently supported target systems:
 And maybe one day Sibuserv will be able to build C++ apps for macOS too.
 
 This project is not self-contained, it depends on few other projects:
-* LXE -- Linux cross-toolchain environment
-* MXE -- M cross environment (for MS Windows)
+* LXE – Linux cross-toolchain environment
+* MXE – M cross environment (for MS Windows)
 * official Android SDK and NDK
 * official Qt SDK (for Android)
 
