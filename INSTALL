@@ -15,6 +15,8 @@
 * git       (optional)
 * svn       (optional)
 * hg        (optional)
+* ant       (optional)
+* jdk       (optional)
 
 
 ===== Configuration options =====
@@ -70,10 +72,24 @@ Scripts may be launched from any directory:
 
 
 ===== Launching build-server-daemon using systemd =====
-sudo cp ./etc/systemd/build-server-daemon.service /lib/systemd/system/
-sudo systemctl daemon-reload
-sudo systemctl enable build-server-daemon
-sudo systemctl restart build-server-daemon
+Add special user, for example:
+  sudo adduser sibuserv
+
+Then set up user privileges in a system (access to files, network, etc.) in
+according with "principle of least privilege". For example, write access may be
+limited by directories from BUILD_SERVER_SRC_DIRS and BUILD_SERVER_BIN_DIR
+config variables.
+
+Next, edit systemd service file ./etc/systemd/build-server-daemon.service if
+necessary and copy it into appropriate place:
+  sudo cp ./etc/systemd/build-server-daemon.service /lib/systemd/system/
+
+And finally:
+  sudo systemctl daemon-reload
+  sudo systemctl enable build-server-daemon
+  sudo systemctl restart build-server-daemon
+
+Congratulations! Your build server is ready to use.
 
 
 ===== Installation of Web UI =====
