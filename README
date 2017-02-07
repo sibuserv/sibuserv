@@ -31,28 +31,12 @@ access rights, etc.). Its usage is convenient but is not mandatory. You may
 provide access to build results via Samba, any FTP or HTTP server, using one
 of file hosting services and so on.
 
-Dependencies:
-bash, realpath, pkg-config, make, cmake, patch, sed, find, cppcheck
+For information how to install and how to use Sibuserv see file INSTALL.
 
-Examples of usage (program should be launched in project directory):
-  build-project
-  build-project AstraLinux-1.2_static
-  build-project Ubuntu-14.04-LTS_i386_shared Ubuntu-14.04-LTS_amd64_shared
-  build-project install
-  build-project install x86_64-w64-mingw32.shared
-  build-project list
-  build-project clean
-  build-project clean AstraLinux-1.2_static i686-w64-mingw32.static
-  build-project distclean
-  build-project distclean x86_64-w64-mingw32.static
-  build-project delete
-  build-project delete android-21_x86 android-21_arm
-  build-project --version
-  build-project --help
-
-Other tools (may be launched from any directory):
-  build-supervisor
-  build-server-daemon &
+Screenshots:
+  https://tehnick.github.io/sibuserv/screenshots/00.png
+  https://tehnick.github.io/sibuserv/screenshots/01.png
+  https://tehnick.github.io/sibuserv/screenshots/05.png
 
 Useful links:
   http://mxe.cc/

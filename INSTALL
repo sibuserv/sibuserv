@@ -1,0 +1,81 @@
+===== Build dependencies =====
+* wget      (optional)
+* unzip     (optional)
+* git       (optional)
+
+
+===== Runtime dependencies =====
+* bash
+* realpath
+* make
+* cmake
+* sed
+* find
+* cppcheck  (optional)
+* git       (optional)
+* svn       (optional)
+* hg        (optional)
+
+
+===== Configuration options =====
+Edit ./Makefile if necessary.
+
+
+===== Installation =====
+sudo make install
+
+
+===== Build environments =====
+For downloading of tools for build environments use:
+  make linux
+  make windows
+  make android
+  make qt-sdk
+or
+  make
+
+Downloaded files and unpacked folders should appear in ./opt/ subdirectory.
+Copy or move them where you want and use their instructions for setup.
+
+
+===== Basic configuration files =====
+Example of config you may find at ./etc/sibuserv/sibuserv.conf
+Just edit and copy it into one of these places:
+* /etc/sibuserv/sibuserv.conf
+* ${HOME}/.config/sibuserv/sibuserv.conf
+
+
+===== Examples of building a project =====
+Program should be launched in project directory:
+  build-project list
+  build-project
+  build-project AstraLinux-1.2_static
+  build-project Ubuntu-14.04-LTS_i386_shared Ubuntu-14.04-LTS_amd64_shared
+  build-project install
+  build-project install x86_64-w64-mingw32.shared
+  build-project clean
+  build-project clean AstraLinux-1.2_static i686-w64-mingw32.static
+  build-project distclean
+  build-project distclean x86_64-w64-mingw32.static
+  build-project delete
+  build-project delete android-21_x86 android-21_arm
+  build-project --version
+  build-project --help
+
+
+===== Examples of launching build server tools =====
+Scripts may be launched from any directory:
+  build-supervisor
+  build-server-daemon &
+
+
+===== Launching build-server-daemon using systemd =====
+sudo cp ./etc/systemd/build-server-daemon.service /lib/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable build-server-daemon
+sudo systemctl restart build-server-daemon
+
+
+===== Installation of Web UI =====
+See: https://github.com/sibuserv/sibuserv-webui
+
