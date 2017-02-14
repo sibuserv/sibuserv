@@ -6,8 +6,8 @@ GIT = git
 ANDROID_SDK_VERSION = r25.2.3
 ANDROID_NDK_VERSION = r13b
 
-QT_SERIES=5.7
-QT_VERSION=5.7.1
+QT_SERIES=5.8
+QT_VERSION=5.8.0
 
 # https://developer.android.com/studio/index.html#downloads
 # https://developer.android.com/ndk/downloads/index.html
