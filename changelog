@@ -1,6 +1,10 @@
 --- v1.3 (2017-xx-xx) ---
 *** common ***
 * Update Qt SDK version from 5.7.1 to 5.8.0.
+*** build-project ***
+* Change order of checks in DetectBuildAutomationSystemType():
+  from: qmake --> cmake --> autotools --> unknown
+  to:   cmake --> autotools --> qmake --> unknown
 
 --- v1.2 (2017-01-23) ---
 *** common ***

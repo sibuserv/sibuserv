@@ -289,12 +289,7 @@ DetectBuildAutomationSystemType()
         export PROJECT_SRC_DIR="${PROJECT_DIR}" || \
         export PROJECT_SRC_DIR="tmp-sources-dir"
 
-    if [ "$(ls *.pro 2> /dev/null | wc -l)" != "0" ]
-    then
-        export BUILD_SYSTEM_TYPE="qmake"
-        export PROJECT_FILE="${PROJECT_SRC_DIR}/$(ls *.pro | head -n1)"
-        return 0
-    elif [ "$(ls CMakeLists.txt 2> /dev/null | wc -l)" != "0" ]
+    if [ "$(ls CMakeLists.txt 2> /dev/null | wc -l)" != "0" ]
     then
         export BUILD_SYSTEM_TYPE="cmake"
         export PROJECT_FILE="${PROJECT_SRC_DIR}/CMakeLists.txt"
@@ -303,6 +298,11 @@ DetectBuildAutomationSystemType()
     then
         export BUILD_SYSTEM_TYPE="autotools"
         export PROJECT_FILE="${PROJECT_SRC_DIR}/configure"
+        return 0
+    elif [ "$(ls *.pro 2> /dev/null | wc -l)" != "0" ]
+    then
+        export BUILD_SYSTEM_TYPE="qmake"
+        export PROJECT_FILE="${PROJECT_SRC_DIR}/$(ls *.pro | head -n1)"
         return 0
     else
         echo "Unknown build automation system type!"
