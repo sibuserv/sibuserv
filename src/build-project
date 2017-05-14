@@ -600,6 +600,7 @@ InstallQmakeProject()
         -name '*mocinclude.opt*' -o \
         -name '*object_script*' -o \
         -name '*.qmake.stash*' -o \
+        -name '*_resource.rc' -o \
         -name '*Makefile*' -o \
         -name '*.cpp' -o \
         -name '*.h' | \

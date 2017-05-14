@@ -5,6 +5,8 @@
 * Change order of checks in DetectBuildAutomationSystemType():
   from: qmake --> cmake --> autotools --> unknown
   to:   cmake --> autotools --> qmake --> unknown
+* Update InstallQmakeProject():
+  delete automatically generated *_resource.rc files.
 
 --- v1.2 (2017-01-23) ---
 *** common ***
