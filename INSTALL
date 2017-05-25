@@ -40,6 +40,15 @@ or
 Downloaded files and unpacked folders should appear in ./opt/ subdirectory.
 Copy or move them where you want and use their instructions for setup.
 
+Android specific notes:
+Since Android SDK 25.3.0 script `tools/android` does not launch convenient GUI
+tool for managing packages. You have to use command line tool `sdkmanager` for
+installing necessary packages manualy. For example:
+  tools/bin/sdkmanager --list
+  tools/bin/sdkmanager --verbose --list
+  tools/bin/sdkmanager --verbose 'platforms;android-19' 'platforms;android-21'
+  tools/bin/sdkmanager --verbose --update
+
 
 ===== Basic configuration files =====
 Example of config you may find at ./etc/sibuserv/sibuserv.conf
