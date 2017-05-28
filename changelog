@@ -2,7 +2,12 @@
 *** common ***
 * Update Qt SDK version from 5.7.1 to 5.8.0.
 * Update Android NDK version from r13b to r14b.
-* Update Android SDK version from r24.4.1 to r26.0.2 (3859397).
+* Update Android SDK version from r24.4.1 to r25.2.5.
+  Newer versions (>= 25.3.0) could not be used because due to missing of Gradle
+  scripts they break packaging of APK files.
+
+Update Android SDK version from r24.4.1 to r26.0.2 (3859397).
+
 *** build-project ***
 * Change order of checks in DetectBuildAutomationSystemType():
   from: qmake --> cmake --> autotools --> unknown
