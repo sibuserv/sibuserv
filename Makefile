@@ -28,7 +28,7 @@ QT_SDK_ONLINE_INSTALLER_FILE = qt-unified-linux-x64-online.run
 QT_SDK_FOR_ANDROID_URL      = https://download.qt.io/official_releases/qt/$(QT_SERIES)/$(QT_VERSION)
 QT_SDK_ONLINE_INSTALLER_URL = https://download.qt.io/official_releases/online_installers
 
-download: check-system linux windows android
+download: check-system linux windows android qt-sdk-online
 
 prepare-dir:
 	mkdir -p $(CURDIR)/opt
@@ -59,13 +59,15 @@ android: prepare-dir
 	cd $(CURDIR)/opt && [ -d "android-ndk-$(ANDROID_NDK_VERSION)" ] || \
 		$(UNZIP) "$(ANDROID_NDK_FILE)" > /dev/null
 
-qt-sdk: prepare-dir
-	cd $(CURDIR)/opt && [ -e "$(QT_SDK_FOR_ANDROID_FILE)" ] || \
-		$(DOWNLOADER) $(QT_SDK_FOR_ANDROID_URL)/$(QT_SDK_FOR_ANDROID_FILE)
+qt-sdk-online: prepare-dir
 	cd $(CURDIR)/opt && [ -e "$(QT_SDK_ONLINE_INSTALLER_FILE)" ] || \
 		$(DOWNLOADER) $(QT_SDK_ONLINE_INSTALLER_URL)/$(QT_SDK_ONLINE_INSTALLER_FILE)
-	chmod uog+x $(CURDIR)/opt/$(QT_SDK_FOR_ANDROID_FILE) \
-		    $(CURDIR)/opt/$(QT_SDK_ONLINE_INSTALLER_FILE)
+	chmod uog+x $(CURDIR)/opt/$(QT_SDK_ONLINE_INSTALLER_FILE)
+
+qt-sdk-offline: prepare-dir
+	cd $(CURDIR)/opt && [ -e "$(QT_SDK_FOR_ANDROID_FILE)" ] || \
+		$(DOWNLOADER) $(QT_SDK_FOR_ANDROID_URL)/$(QT_SDK_FOR_ANDROID_FILE)
+	chmod uog+x $(CURDIR)/opt/$(QT_SDK_FOR_ANDROID_FILE)
 
 install:
 	mkdir -p $(DESTDIR)/bin
