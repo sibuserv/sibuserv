@@ -6,7 +6,7 @@
 ##### Default settings #####
 
 # Number of compilation processes:
-[ -z "${JOBS}" ] && export JOBS=4
+[ -z "${JOBS}" ] && export JOBS=$(nproc 2>/dev/null || echo 1)
 
 export BUILD_SERVER_SRC_DIRS="${HOME}/BuildServer/Sources"
 export BUILD_SERVER_BIN_DIR="${HOME}/BuildServer/Binaries"

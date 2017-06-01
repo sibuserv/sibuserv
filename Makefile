@@ -9,8 +9,8 @@ ANDROID_NDK_VERSION = r14b
 ANDROID_SDK_CHECKSUM = 577516819c8b5fae680f049d39014ff1ba4af870b687cab10595783e6f22d33e
 ANDROID_NDK_CHECKSUM = becd161da6ed9a823e25be5c02955d9cbca1dbeb
 
-QT_SERIES=5.8
-QT_VERSION=5.8.0
+QT_SERIES=5.9
+QT_VERSION=5.9.0
 
 # https://developer.android.com/studio/index.html#downloads
 # https://developer.android.com/ndk/downloads/index.html
@@ -19,14 +19,14 @@ QT_VERSION=5.8.0
 ANDROID_SDK_FILE = tools_$(ANDROID_SDK_VERSION)-linux.zip
 ANDROID_NDK_FILE = android-ndk-$(ANDROID_NDK_VERSION)-linux-x86_64.zip
 
-ANDROID_SDK_URL = https://dl.google.com/android/repository/
-ANDROID_NDK_URL = https://dl.google.com/android/repository/
+ANDROID_SDK_URL = https://dl.google.com/android/repository
+ANDROID_NDK_URL = https://dl.google.com/android/repository
 
-QT_SDK_FOR_ANDROID_FILE      = qt-opensource-linux-x64-android-$(QT_VERSION).run
+QT_SDK_FOR_ANDROID_FILE      = qt-opensource-linux-x64-$(QT_VERSION).run
 QT_SDK_ONLINE_INSTALLER_FILE = qt-unified-linux-x64-online.run
 
-QT_SDK_FOR_ANDROID_URL      = https://download.qt.io/official_releases/qt/$(QT_SERIES)/$(QT_VERSION)/
-QT_SDK_ONLINE_INSTALLER_URL = https://download.qt.io/official_releases/online_installers/
+QT_SDK_FOR_ANDROID_URL      = https://download.qt.io/official_releases/qt/$(QT_SERIES)/$(QT_VERSION)
+QT_SDK_ONLINE_INSTALLER_URL = https://download.qt.io/official_releases/online_installers
 
 download: check-system linux windows android
 

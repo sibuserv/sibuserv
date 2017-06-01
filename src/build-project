@@ -13,7 +13,7 @@ export PROJECT_DIR="$(realpath -s .)"
 export LXE_DIR="/opt/lxe"
 export MXE_DIR="/opt/mxe"
 
-export QT_SERIES="5.8"
+export QT_SERIES="5.9"
 export QT_SDK_DIR="/opt/Qt/qt-current/${QT_SERIES}"
 
 export ANDROID_SDK_ROOT="/opt/android_sdk/android-sdk-linux"
