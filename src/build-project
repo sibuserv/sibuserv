@@ -67,10 +67,14 @@ then
     elif [ ! -z "${2}" ]
     then
         export SYSTEMS=""
-        for N in $(seq 2 $#)
+        export ARG_NUM=0
+        for A in $@
         do
-            export SYSTEMS="${SYSTEMS} $(eval echo \$${N})"
+            export ARG_NUM="$(expr ${ARG_NUM} + 1)"
+            [ "${ARG_NUM}" -lt "2" ] && continue || true
+            export SYSTEMS="${SYSTEMS} ${A}"
         done
+        unset ARG_NUM
     fi
 fi
 

@@ -4,6 +4,9 @@
 * Delete 'qt-sdk' target and add 'qt-sdk-online' and 'qt-sdk-offline' into
   Makefile instead of it. Only 'qt-sdk-online' is used when default target
   ('download') is called.
+*** build-project ***
+* Fix calculation of SYSTEMS variable when more than 9 systems are set througt
+  command-line options.
 
 --- v1.3 (2017-05-30) ---
 *** common ***
