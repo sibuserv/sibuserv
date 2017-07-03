@@ -10,7 +10,7 @@ ANDROID_SDK_CHECKSUM = 577516819c8b5fae680f049d39014ff1ba4af870b687cab10595783e6
 ANDROID_NDK_CHECKSUM = becd161da6ed9a823e25be5c02955d9cbca1dbeb
 
 QT_SERIES=5.9
-QT_VERSION=5.9.0
+QT_VERSION=5.9.1
 
 # https://developer.android.com/studio/index.html#downloads
 # https://developer.android.com/ndk/downloads/index.html

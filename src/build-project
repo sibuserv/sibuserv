@@ -13,8 +13,8 @@ export PROJECT_DIR="$(realpath -s .)"
 export LXE_DIR="/opt/lxe"
 export MXE_DIR="/opt/mxe"
 
-export QT_SERIES="5.9"
-export QT_SDK_DIR="/opt/Qt/qt-current/${QT_SERIES}"
+export QT_VERSION="5.9.1"
+export QT_SDK_DIR="/opt/Qt/qt-current/${QT_VERSION}"
 
 export ANDROID_SDK_ROOT="/opt/android_sdk/android-sdk-linux"
 export ANDROID_NDK_ROOT="/opt/android_ndk/android-ndk-r14b"
@@ -25,12 +25,11 @@ export ANT="/usr/bin/ant"
 
 if [ -z "${SYSTEMS}" ]
 then
-    export SYSTEMS="${SYSTEMS} i686-w64-mingw32.static x86_64-w64-mingw32.static"
-    export SYSTEMS="${SYSTEMS} Ubuntu-14.04-LTS_i386_static Ubuntu-14.04-LTS_amd64_static"
-    # export SYSTEMS="${SYSTEMS} Ubuntu-14.04-LTS_i386_shared Ubuntu-14.04-LTS_amd64_shared"
+    export SYSTEMS="${SYSTEMS} x86_64-w64-mingw32.shared i686-w64-mingw32.shared"
+    export SYSTEMS="${SYSTEMS} Ubuntu-14.04-LTS_amd64_shared Ubuntu-14.04-LTS_i386_shared"
+    # export SYSTEMS="${SYSTEMS} Ubuntu-14.04-LTS_i386_static Ubuntu-14.04-LTS_amd64_static"
     # export SYSTEMS="${SYSTEMS} AstraLinux-1.2_static AstraLinux-1.3_static AstraLinux-1.4_static"
-    # export SYSTEMS="${SYSTEMS} AstraLinux-1.2_shared AstraLinux-1.3_shared AstraLinux-1.4_shared"
-    export SYSTEMS="${SYSTEMS} android-21_x86 android-21_arm"
+    export SYSTEMS="${SYSTEMS} android-21_arm android-21_x86"
 fi
 
 ##### Do not edit lines below! #####

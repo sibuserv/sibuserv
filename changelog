@@ -1,6 +1,6 @@
 --- v1.4 (2017-xx-xx) ---
 *** common ***
-* Update Qt SDK version from 5.8.0 to 5.9.0.
+* Update Qt SDK version from 5.8.0 to 5.9.1.
 * Delete 'qt-sdk' target and add 'qt-sdk-online' and 'qt-sdk-offline' into
   Makefile instead of it. Only 'qt-sdk-online' is used when default target
   ('download') is called.
