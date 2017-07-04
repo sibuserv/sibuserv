@@ -4,10 +4,10 @@ UNZIP = unzip
 GIT = git
 
 ANDROID_SDK_VERSION = r25.2.5
-ANDROID_NDK_VERSION = r14b
+ANDROID_NDK_VERSION = r15b
 
 ANDROID_SDK_CHECKSUM = 577516819c8b5fae680f049d39014ff1ba4af870b687cab10595783e6f22d33e
-ANDROID_NDK_CHECKSUM = becd161da6ed9a823e25be5c02955d9cbca1dbeb
+ANDROID_NDK_CHECKSUM = 2690d416e54f88f7fa52d0dcb5f539056a357b3b
 
 QT_SERIES=5.9
 QT_VERSION=5.9.1
@@ -15,6 +15,7 @@ QT_VERSION=5.9.1
 # https://developer.android.com/studio/index.html#downloads
 # https://developer.android.com/ndk/downloads/index.html
 # https://download.qt.io/official_releases/qt/
+# https://wiki.qt.io/Qt_for_Android_known_issues
 
 ANDROID_SDK_FILE = tools_$(ANDROID_SDK_VERSION)-linux.zip
 ANDROID_NDK_FILE = android-ndk-$(ANDROID_NDK_VERSION)-linux-x86_64.zip
