@@ -46,8 +46,11 @@ tool for managing packages. You have to use command line tool `sdkmanager` for
 installing necessary packages manualy. For example:
   tools/bin/sdkmanager --list
   tools/bin/sdkmanager --verbose --list
-  tools/bin/sdkmanager --verbose 'build-tools;25.0.3'
+  tools/bin/sdkmanager --verbose 'build-tools;26.0.0'
   tools/bin/sdkmanager --verbose 'platforms;android-19' 'platforms;android-25'
+  tools/bin/sdkmanager --verbose 'platforms;android-21' 'platforms;android-24'
+  tools/bin/sdkmanager --verbose 'platforms;android-22' 'platforms;android-23'
+  tools/bin/sdkmanager --verbose 'platform-tools'
   tools/bin/sdkmanager --verbose --update
 
 
