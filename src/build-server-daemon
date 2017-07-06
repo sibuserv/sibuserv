@@ -1,13 +1,36 @@
 #!/bin/bash
 
+# User configuration file: ~/.config/sibuserv/sibuserv.conf
+# System configuration file: /etc/sibuserv/sibuserv.conf
+
+##### Default settings #####
+
+# Delay between builds. See `man sleep` for allowed values.
+export DELAY_BETWEEN_BUILDS="5m"
+
+##### Do not edit lines below! #####
+
+##### Load settings from configuration file if it exists #####
+
+for CONF_FILE in "/etc/sibuserv/sibuserv.conf" \
+                 "${HOME}/.config/sibuserv/sibuserv.conf"
+do
+    [ -r "${CONF_FILE}" ] && . "${CONF_FILE}" || true
+done
+
+##### Script body #####
+
+# Protection from simultaneous run of few copies.
 SCRIPT_NAME="$(basename ${0})"
 SCRIPT_PID="$(pidof -o %PPID -x ${SCRIPT_NAME})"
-
 [ ! -z "${SCRIPT_PID}" ] && exit 0
+
+# Protection from changing of DELAY variable.
+DELAY="${DELAY_BETWEEN_BUILDS}"
 
 while [ 1 ]
 do
     build-supervisor
-    sleep 5m
+    sleep "${DELAY}"
 done
 

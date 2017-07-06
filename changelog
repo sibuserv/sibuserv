@@ -8,6 +8,8 @@
 *** build-project ***
 * Fix calculation of SYSTEMS variable when more than 9 systems are set througt
   command-line options.
+*** build-server-daemon ***
+* Use DELAY_BETWEEN_BUILDS variable from config files.
 
 --- v1.3 (2017-05-30) ---
 *** common ***
