@@ -643,7 +643,7 @@ InstallUsualProject()
 
     echo >> "${LOG_FILE}" && echo >> "${LOG_FILE}" && echo >> "${LOG_FILE}"
 
-    make install DESTDIR="../${SYSTEM}-out" -j1 -i -k &>> "${LOG_FILE}"
+    make install DESTDIR="../${SYSTEM}-out" -j1 -k &>> "${LOG_FILE}"
     [ ! -d "../${SYSTEM}-out" ] && mkdir "../${SYSTEM}-out" || true
     cp -af *.log "../${SYSTEM}-out" &> /dev/null
 }
