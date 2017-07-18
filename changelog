@@ -10,6 +10,8 @@
   command-line options.
 * Fix InstallUsualProject(): do not force installation of (incompletely) built
   project (`make -i ...`).
+* Change InstallQmakeProject(): remove all build static libraries when there
+  are more than one *.a file.
 *** build-server-daemon ***
 * Use DELAY_BETWEEN_BUILDS variable from config files.
 
