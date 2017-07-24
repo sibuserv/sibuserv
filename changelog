@@ -1,4 +1,4 @@
---- v1.4 (2017-xx-xx) ---
+--- v1.4 (2017-07-25) ---
 *** common ***
 * Update Qt SDK version from 5.8.0 to 5.9.1.
 * Update Android NDK version from r13b to r15b.
