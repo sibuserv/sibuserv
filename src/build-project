@@ -469,8 +469,7 @@ PrepareBuild()
             local  ANDROID_PREFIX="${ANDROID_NDK_ROOT}/toolchains/${TARGET_SPECIAL_NAME}-${ANDROID_NDK_TOOLCHAIN_VERSION}/prebuilt/linux-x86_64"
             local  ANDROID_LLVM_DIR="${ANDROID_NDK_ROOT}/toolchains/llvm/prebuilt/linux-x86_64"
             export CFLAGS="--sysroot=${ANDROID_SYSROOT} \
-                           -I${ANDROID_SYSROOT}/usr/include \
-                           -I${ANDROID_PREFIX}/include"
+                           -I${ANDROID_NDK_ROOT}/usr/include"
             export LDFLAGS="-L${ANDROID_SYSROOT}/usr/lib -L${ANDROID_PREFIX}/lib"
             export CPPFLAGS="${CFLAGS}"
             export CXXFLAGS="${CFLAGS}"
