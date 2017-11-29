@@ -382,7 +382,7 @@ UnsetAndroidSpecificVariables()
     unset ARCH TARGET TARGET_SPECIAL_NAME TARGET_QT_SDK_NAME
 }
 
-PrepareBuild()
+PrepareBuildEnvironment()
 {
     unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
 
@@ -495,7 +495,10 @@ PrepareBuild()
         fi
     ;;
     esac
+}
 
+PrepareBuildDirectory()
+{
     mkdir -p "${BUILD_SUB_DIR}"
     rm -rf "${LOG_FILE}"
 }
@@ -723,6 +726,7 @@ do
 
     DefinePaths
     CheckSystem || continue
+    PrepareBuildEnvironment || continue
 
     if [ "${1}" = "install" ]
     then
@@ -734,7 +738,7 @@ do
     then
         InstallToQtSDK
     else
-        PrepareBuild || continue
+        PrepareBuildDirectory
         BeginBuildInfo
         BuildProject
         EndBuildInfo
