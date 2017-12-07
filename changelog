@@ -1,8 +1,8 @@
 --- v1.4 (2017-xx-xx) ---
 *** common ***
 * Update Qt SDK version from 5.9.1 to 5.10.0.
-*** build-project ***
 * Update Android NDK version from r15b to r16b.
+*** build-project ***
 * Fix build of autotools based projects with Android NDK r16 and later.
 * Rename PrepareBuild() to PrepareBuildEnvironment() and move part of it into
   new function PrepareBuildDirectory().
