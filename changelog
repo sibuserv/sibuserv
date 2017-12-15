@@ -1,4 +1,4 @@
---- v1.6 (2017-12-xx) ---
+--- v1.6 (2017-12-15) ---
 *** common ***
 * Revert Android NDK version from r16b to r15b.
   (GCC from Android NDK >= r16 has few very inconvenient issues.)
