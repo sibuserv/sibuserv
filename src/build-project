@@ -15,7 +15,7 @@ export QT_VERSION="5.10.0"
 export QT_SDK_DIR="/opt/Qt/qt-current/${QT_VERSION}"
 
 export ANDROID_SDK_ROOT="/opt/android_sdk/android-sdk-linux"
-export ANDROID_NDK_ROOT="/opt/android_ndk/android-ndk-r16b"
+export ANDROID_NDK_ROOT="/opt/android_ndk/android-ndk-r15b"
 export ANDROID_NDK_TOOLCHAIN_VERSION="4.9"
 
 export JDK="$(ls -d /usr/lib/jvm/java-*-openjdk-* | sort -V | tail -n1)"

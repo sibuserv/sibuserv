@@ -1,3 +1,8 @@
+--- v1.6 (2017-12-15) ---
+*** common ***
+* Revert Android NDK version from r16b to r15b.
+  (GCC from Android NDK >= r16 has few very inconvenient issues.)
+
 --- v1.5 (2017-12-08) ---
 *** common ***
 * Update Qt SDK version from 5.9.1 to 5.10.0.
