@@ -1,7 +1,10 @@
---- v1.6 (2017-12-15) ---
+--- v1.6 (2017-12-xx) ---
 *** common ***
 * Revert Android NDK version from r16b to r15b.
   (GCC from Android NDK >= r16 has few very inconvenient issues.)
+*** build-project ***
+* Simplify build rules for autotools based projects after reverting to
+  Android NDK r15b.
 
 --- v1.5 (2017-12-08) ---
 *** common ***
