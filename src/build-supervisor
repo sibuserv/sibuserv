@@ -161,10 +161,13 @@ ProcessProject()
         BeginProjectBuild
 
         cd "${SOURCES_DIR}/${PROJECT}" || exit 1
-        build-project ${SYSTEMS} &> /dev/null
-        build-project install ${SYSTEMS} &> /dev/null
-        build-project delete  ${SYSTEMS} &> /dev/null
-        build-project rename  ${SYSTEMS} &> /dev/null
+        for CUR_SYSTEM in ${SYSTEMS}
+        do
+            build-project ${CUR_SYSTEM}         &> /dev/null
+            build-project install ${CUR_SYSTEM} &> /dev/null
+            build-project delete  ${CUR_SYSTEM} &> /dev/null
+            build-project rename  ${CUR_SYSTEM} &> /dev/null
+        done
 
         StartStaticCodeAnalysis
         EndProjectBuild

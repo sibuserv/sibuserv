@@ -1,3 +1,9 @@
+--- v1.7 (2018-xx-xx) ---
+*** build-server-daemon ***
+* Changed algorithm of building of projects: now project is installed just
+  after build for current target system without waiting of end of build for
+  other target systems.
+
 --- v1.6 (2017-12-15) ---
 *** common ***
 * Revert Android NDK version from r16b to r15b.
