@@ -96,7 +96,8 @@ config variables.
 
 Next, edit systemd service file ./etc/systemd/build-server-daemon.service if
 necessary and copy it into appropriate place:
-  sudo cp ./etc/systemd/build-server-daemon.service /lib/systemd/system/
+  sudo cp -a ./etc/systemd/build-server-daemon.service \
+              /lib/systemd/system/build-server-daemon.service
 
 And finally:
   sudo systemctl daemon-reload
