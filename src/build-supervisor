@@ -73,7 +73,7 @@ GetCurrentVersion()
             then
                 CURRENT_VER="$(git describe --tags)"
             else
-                CURRENT_VER="$(TZ=UTC git show -s --pretty='format:%ad__%h' --date=format-local:'%Y%m%d-%H%M%S')"
+                CURRENT_VER="$(TZ=UTC git show -s --pretty='format:%ad__%h' --date=format-local:'%Y%m%d-%H%M%S' 2> /dev/null)"
             fi
         fi
     elif [ -d ".hg" ]
