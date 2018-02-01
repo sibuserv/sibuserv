@@ -1,14 +1,14 @@
 --- TODO ---
-* Add support of spec scripts which will allow users to configure, build and
-  install projects in a user defined way.
+* Add support of spec configs (.sibuserv-ci.yml) which will allow users to
+  configure, build and install projects in a user defined way.
 * Add examples of qmake-, cmake- and autotools-based projects which could be
   built for GNU/Linux, MS Windows and Android.
 * Add support of static code analysis using Clang Static Analyzer (from host
   system or from QtCreator >= 4.x).
+* Add special proxy daemon for receiving events from GitLab webhooks.
+  For example, for checking of commits from merge requests.
+! Add support of launching `build-project` in Firejail sandbox.
 ? Switch to Clang compiler for Android builds by default.
-? Add cmake toolchain files for Android and/or scripts for simplifying build of
-  programs which depend on extra libraries.
-? Add support of launching `build-project` in Firejail sandbox.
 ? Add support of static code analysis using PVS-Studio.
 ? Add support of sending email messages when build of project is failed.
 ? Add support of packaging into Appimage packages (https://appimage.org/).
