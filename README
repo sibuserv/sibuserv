@@ -22,7 +22,7 @@ And maybe one day Sibuserv will be able to build C++ apps for macOS too.
 This project is not self-contained, it depends on few other projects:
 * LXE – Linux cross-toolchain environment
 * MXE – M cross environment (for MS Windows)
-* official Android SDK and NDK
+* aplump – plump Android (for Android)
 * official Qt SDK (for Android)
 
 There is special Sibuserv Web UI which allows to browse build results and
@@ -42,6 +42,7 @@ Useful links:
   http://mxe.cc/
   https://github.com/sibuserv/mxe
   https://github.com/sibuserv/lxe
+  https://github.com/sibuserv/aplump
   https://github.com/sibuserv/sibuserv-webui
 
 Important notes:
