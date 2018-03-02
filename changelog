@@ -1,4 +1,4 @@
---- v1.7 (2018-xx-xx) ---
+--- v1.7 (2018-03-03) ---
 *** common ***
 * Update Qt SDK version from 5.10.0 to 5.10.1.
 * Rewrite 'android' target in Makefile for downloading of aplump project
