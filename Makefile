@@ -1,29 +1,14 @@
 DESTDIR = /usr
 DOWNLOADER = wget
-UNZIP = unzip
 GIT = git
 
-ANDROID_SDK_VERSION = r25.2.5
-ANDROID_NDK_VERSION = r15b
-
-ANDROID_SDK_CHECKSUM = 577516819c8b5fae680f049d39014ff1ba4af870b687cab10595783e6f22d33e # SHA256
-ANDROID_NDK_CHECKSUM = 2690d416e54f88f7fa52d0dcb5f539056a357b3b # SHA1
-
 QT_SERIES=5.10
-QT_VERSION=5.10.0
+QT_VERSION=5.10.1
 
 QT_SDK_CHECKSUM = 9f13c6f346ac74de85ba01a5328a1e1c # MD5
 
-# https://developer.android.com/studio/index.html#downloads
-# https://developer.android.com/ndk/downloads/index.html
 # https://download.qt.io/official_releases/qt/
 # https://wiki.qt.io/Qt_for_Android_known_issues
-
-ANDROID_SDK_FILE = tools_$(ANDROID_SDK_VERSION)-linux.zip
-ANDROID_NDK_FILE = android-ndk-$(ANDROID_NDK_VERSION)-linux-x86_64.zip
-
-ANDROID_SDK_URL = https://dl.google.com/android/repository
-ANDROID_NDK_URL = https://dl.google.com/android/repository
 
 QT_SDK_FOR_ANDROID_FILE      = qt-opensource-linux-x64-$(QT_VERSION).run
 QT_SDK_ONLINE_INSTALLER_FILE = qt-unified-linux-x64-online.run
@@ -53,14 +38,8 @@ windows: prepare-dir
 		$(GIT) clone https://github.com/sibuserv/mxe.git
 
 android: prepare-dir
-	cd $(CURDIR)/opt && [ -e "$(ANDROID_SDK_FILE)" ] || \
-		$(DOWNLOADER) $(ANDROID_SDK_URL)/$(ANDROID_SDK_FILE)
-	cd $(CURDIR)/opt && [ -e "$(ANDROID_NDK_FILE)" ] || \
-		$(DOWNLOADER) $(ANDROID_NDK_URL)/$(ANDROID_NDK_FILE)
-	cd $(CURDIR)/opt && [ -d "android-sdk-linux" ] || \
-		$(UNZIP) $(ANDROID_SDK_FILE) -d "android-sdk-linux" > /dev/null
-	cd $(CURDIR)/opt && [ -d "android-ndk-$(ANDROID_NDK_VERSION)" ] || \
-		$(UNZIP) "$(ANDROID_NDK_FILE)" > /dev/null
+	cd $(CURDIR)/opt && [ -d aplump ] || \
+		$(GIT) clone https://github.com/sibuserv/aplump.git
 
 qt-sdk-online: prepare-dir
 	cd $(CURDIR)/opt && [ -e "$(QT_SDK_ONLINE_INSTALLER_FILE)" ] || \

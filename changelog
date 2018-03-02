@@ -1,4 +1,9 @@
 --- v1.7 (2018-xx-xx) ---
+*** common ***
+* Update Qt SDK version from 5.10.0 to 5.10.1.
+* Rewrite 'android' target in Makefile for downloading of aplump project
+  (https://github.com/sibuserv/aplump) instead of direct downloading and
+  unpacking of Android SDK and NDK.
 *** build-server-daemon ***
 * Changed algorithm of building of projects: now project is installed just
   after build for current target system without waiting of end of build for
