@@ -18,7 +18,6 @@ export ANDROID_NDK_ROOT="/opt/android_ndk/android-ndk-r15b"
 export ANDROID_NDK_TOOLCHAIN_VERSION="4.9"
 
 export JDK="$(ls -d /usr/lib/jvm/java-*-openjdk-* | sort -V | tail -n1)"
-export ANT="/usr/bin/ant"
 
 if [ -z "${SYSTEMS}" ]
 then
@@ -551,11 +550,12 @@ BuildAndroidPackage()
             --android-platform "${ANDROID_PLATFORM}" \
             --deployment bundled \
             --jdk "${JDK}" \
-            --ant "${ANT}" \
+            --gradle \
             --verbose
         #    --sign foo bar \
         #    --sign 'example' \
         #    --storepass '123456' \
+        #    --android-platform android-25
 
         if ! IsAndroidDeployQtSafePath "${ANDROID_BUILD_DIR}"
         then
