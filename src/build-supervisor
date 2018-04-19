@@ -22,8 +22,8 @@ export CPPCHECK_OPTIONS="-v -f -j${JOBS} --enable=style --suppress=variableScope
 export SYSTEMS="
                 i686-w64-mingw32.static
                 x86_64-w64-mingw32.static
-                Ubuntu-14.04-LTS_i386_static
-                Ubuntu-14.04-LTS_amd64_static
+                Ubuntu-14.04_i386_static
+                Ubuntu-14.04_amd64_static
                 android-21_x86
                 android-21_arm
                "

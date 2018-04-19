@@ -23,8 +23,8 @@ export ANT="/usr/bin/ant"
 if [ -z "${SYSTEMS}" ]
 then
     export SYSTEMS="${SYSTEMS} x86_64-w64-mingw32.shared i686-w64-mingw32.shared"
-    export SYSTEMS="${SYSTEMS} Ubuntu-14.04-LTS_amd64_shared Ubuntu-14.04-LTS_i386_shared"
-    # export SYSTEMS="${SYSTEMS} Ubuntu-14.04-LTS_i386_static Ubuntu-14.04-LTS_amd64_static"
+    export SYSTEMS="${SYSTEMS} Ubuntu-14.04_amd64_shared Ubuntu-14.04_i386_shared"
+    # export SYSTEMS="${SYSTEMS} Ubuntu-14.04_i386_static Ubuntu-14.04_amd64_static"
     # export SYSTEMS="${SYSTEMS} AstraLinux-1.2_static AstraLinux-1.3_static AstraLinux-1.4_static"
     export SYSTEMS="${SYSTEMS} android-21_arm android-21_x86"
 fi
@@ -110,7 +110,7 @@ Extra options:
 Examples:
     build-project
     build-project AstraLinux-1.2_static
-    build-project Ubuntu-14.04-LTS_i386_shared Ubuntu-14.04-LTS_amd64_shared
+    build-project Ubuntu-14.04_i386_shared Ubuntu-14.04_amd64_shared
     build-project install
     build-project install x86_64-w64-mingw32.shared
     build-project list
