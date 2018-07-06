@@ -9,8 +9,9 @@
   For example, for checking of commits from merge requests.
 ! Add support of launching `build-project` in Firejail sandbox.
 ? Switch to Clang compiler for Android builds by default.
-? Add support of static code analysis using PVS-Studio.
-? Add support of sending email messages when build of project is failed.
+? Add support of sending email message when build of project is failed.
+? Add support of static code analysis using PVS-Studio Analyzer
+  (https://www.viva64.com/en/pvs-studio/).
 ? Add support of packaging into Appimage packages (https://appimage.org/).
 ? Add support of packaging into Flatpak packages (http://flatpak.org/).
 ? Add support of packaging into Snap packages (http://snapcraft.io/).

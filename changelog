@@ -1,3 +1,7 @@
+--- v1.8 (2018-xx-xx) ---
+*** common ***
+* Update Qt SDK version from 5.10.1 to 5.11.1.
+
 --- v1.7 (2018-03-03) ---
 *** common ***
 * Update Qt SDK version from 5.10.0 to 5.10.1.
