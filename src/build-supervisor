@@ -57,7 +57,7 @@ GetCurrentVersion()
     CURRENT_VER="unknown-version"
     if [ -d ".git" ]
     then
-        if [ -d ".git/svn" ]
+        if [ -d ".git/svn/refs" ]
         then
             git svn rebase &> /dev/null
             CURRENT_VER=$(LANG=C.UTF-8 git svn info 2> /dev/null | sed -ne "s|^Last Changed Rev: \(.*\)|\1|p")
