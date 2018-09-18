@@ -3,6 +3,10 @@
 * Update Qt SDK version from 5.10.1 to 5.11.1.
 *** build-project ***
 * Use `export LC_ALL="C"` for logging all build tools messages in English.
+* Run `make` without `--ignore-errors` option, `--keep-going` option is used
+  instead. This should decrease the build logs size in case of broken builds.
+*** build-supervisor ***
+* Tiny changes in work with git svn.
 
 --- v1.7 (2018-03-03) ---
 *** common ***

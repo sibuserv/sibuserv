@@ -398,7 +398,7 @@ PrepareBuildEnvironment()
             export CONFIGURE_TOOL="${SYSTEM_DIR}/qt5/bin/qmake"
             export CONFIGURE_OPTIONS="-r -spec win32-g++ ${PROJECT_FILE}"
             export MAKE_TOOL="make"
-            export MAKE_OPTIONS="-j${JOBS} -i -k"
+            export MAKE_OPTIONS="-j${JOBS} -k"
             export PATH="${MXE_DIR}/usr/bin:${SYSTEM_DIR}/qt5/bin:${ORIG_PATH}"
         elif [[ "${SYSTEM}" = *android* ]]
         then
@@ -406,7 +406,7 @@ PrepareBuildEnvironment()
             export CONFIGURE_TOOL="${QT_SDK_DIR}/${TARGET_QT_SDK_NAME}/bin/qmake"
             export CONFIGURE_OPTIONS="-r -spec android-g++ ${PROJECT_FILE} ANDROID_NDK_ROOT=${ANDROID_NDK_ROOT}"
             export MAKE_TOOL="make"
-            export MAKE_OPTIONS="-j${JOBS} -i -k"
+            export MAKE_OPTIONS="-j${JOBS} -k"
             export PATH="${ORIG_PATH}"
             export PATH="${QT_SDK_DIR}/${TARGET_QT_SDK_NAME}/bin:${PATH}"
             UnsetAndroidSpecificVariables
@@ -414,7 +414,7 @@ PrepareBuildEnvironment()
             export CONFIGURE_TOOL="${SYSTEM_DIR}/qt5/bin/qmake"
             export CONFIGURE_OPTIONS="-r -spec linux-g++-${SYSTEM} ${PROJECT_FILE}"
             export MAKE_TOOL="make"
-            export MAKE_OPTIONS="-j${JOBS} -i -k"
+            export MAKE_OPTIONS="-j${JOBS} -k"
             export PATH="${LXE_DIR}/dist/${SYSTEM}/bin:${SYSTEM_DIR}/qt5/bin:${ORIG_PATH}"
         fi
     ;;
@@ -425,7 +425,7 @@ PrepareBuildEnvironment()
             export CONFIGURE_OPTIONS="-DCMAKE_INSTALL_PREFIX=/usr \
                                       ${PROJECT_SRC_DIR}"
             export MAKE_TOOL="make"
-            export MAKE_OPTIONS="-j${JOBS} -i -k"
+            export MAKE_OPTIONS="-j${JOBS} -k"
             export PATH="${MXE_DIR}/usr/bin:${SYSTEM_DIR}/qt5/bin:${ORIG_PATH}"
         elif [[ "${SYSTEM}" = *android* ]]
         then
@@ -439,7 +439,7 @@ PrepareBuildEnvironment()
                                       -DANDROID_PLATFORM=${ANDROID_PLATFORM} \
                                       ${PROJECT_SRC_DIR}"
             export MAKE_TOOL="make"
-            export MAKE_OPTIONS="-j${JOBS} -i -k"
+            export MAKE_OPTIONS="-j${JOBS} -k"
             export PATH="${ORIG_PATH}"
             export PATH="${QT_SDK_DIR}/${TARGET_QT_SDK_NAME}/bin:${PATH}"
             UnsetAndroidSpecificVariables
@@ -449,7 +449,7 @@ PrepareBuildEnvironment()
             export CONFIGURE_OPTIONS="-DCMAKE_INSTALL_PREFIX=/usr \
                                       ${PROJECT_SRC_DIR}"
             export MAKE_TOOL="make"
-            export MAKE_OPTIONS="-j${JOBS} -i -k"
+            export MAKE_OPTIONS="-j${JOBS} -k"
             export PATH="${LXE_DIR}/dist/${SYSTEM}/bin:${SYSTEM_DIR}/qt5/bin:${ORIG_PATH}"
         fi
     ;;
@@ -459,7 +459,7 @@ PrepareBuildEnvironment()
             export CONFIGURE_TOOL="${PROJECT_FILE}"
             export CONFIGURE_OPTIONS="--target=${SYSTEM} --host=${SYSTEM} --prefix=/usr"
             export MAKE_TOOL="make"
-            export MAKE_OPTIONS="-j${JOBS} -i -k"
+            export MAKE_OPTIONS="-j${JOBS} -k"
             export PATH="${MXE_DIR}/usr/bin:${SYSTEM_DIR}/qt5/bin:${ORIG_PATH}"
         elif [[ "${SYSTEM}" = *android* ]]
         then
@@ -475,7 +475,7 @@ PrepareBuildEnvironment()
             export CONFIGURE_TOOL="${PROJECT_FILE}"
             export CONFIGURE_OPTIONS="--target=${TARGET} --host=${TARGET} --with-sysroot=${ANDROID_SYSROOT} --prefix=/usr"
             export MAKE_TOOL="make"
-            export MAKE_OPTIONS="-j${JOBS} -i -k"
+            export MAKE_OPTIONS="-j${JOBS} -k"
             export PATH="${ORIG_PATH}"
             export PATH="${ANDROID_NDK_ROOT}:${PATH}"
             export PATH="${ANDROID_SDK_ROOT}/tools:${PATH}"
@@ -489,7 +489,7 @@ PrepareBuildEnvironment()
             export CONFIGURE_TOOL="${PROJECT_FILE}"
             export CONFIGURE_OPTIONS="--target=${TARGET} --host=${TARGET} --prefix=/usr"
             export MAKE_TOOL="make"
-            export MAKE_OPTIONS="-j${JOBS} -i -k"
+            export MAKE_OPTIONS="-j${JOBS} -k"
             export PATH="${LXE_DIR}/dist/${SYSTEM}/bin:${SYSTEM_DIR}/qt5/bin:${ORIG_PATH}"
         fi
     ;;
