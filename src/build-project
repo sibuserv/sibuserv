@@ -543,7 +543,7 @@ BuildAndroidPackage()
         fi
 
         rm -rf "${ANDROID_BUILD_DIR}"
-        "${MAKE_TOOL}" INSTALL_ROOT="${ANDROID_BUILD_DIR}" install
+        "${MAKE_TOOL}" install -j1 -k INSTALL_ROOT="${ANDROID_BUILD_DIR}"
 
         androiddeployqt \
             --input  "${ANDROID_SETTINGS_FILE}" \
@@ -602,7 +602,7 @@ InstallQmakeProject()
     cp -af * "../${SYSTEM}-out/" &> /dev/null
 
     cd "${BUILD_DIR}/${SYSTEM}-out/" || return 1
-    make clean &> /dev/null
+    "${MAKE_TOOL}" clean &> /dev/null
     rm -rf ./tmp-sources-dir
     rm -rf ./android-build
     find . -type f \
@@ -645,7 +645,7 @@ InstallUsualProject()
 
     echo >> "${LOG_FILE}" && echo >> "${LOG_FILE}" && echo >> "${LOG_FILE}"
 
-    make install DESTDIR="../${SYSTEM}-out" -j1 -k &>> "${LOG_FILE}"
+    "${MAKE_TOOL}" install -j1 -k DESTDIR="../${SYSTEM}-out" &>> "${LOG_FILE}"
     [ ! -d "../${SYSTEM}-out" ] && mkdir "../${SYSTEM}-out" || true
     cp -af *.log "../${SYSTEM}-out" &> /dev/null
 }
@@ -704,7 +704,7 @@ InstallToQtSDK()
         then
             InstallationInfo "${QT_SDK_INSTALL_DIR}"
             echo >> "${LOG_FILE}" && echo >> "${LOG_FILE}" && echo >> "${LOG_FILE}"
-            make install -j1 -k &>> "${LOG_FILE}"
+            "${MAKE_TOOL}" install -j1 -k &>> "${LOG_FILE}"
             return 0
         fi
     fi
