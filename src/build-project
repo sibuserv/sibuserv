@@ -335,6 +335,11 @@ InstallationInfo()
     echo "[install]   ${@}"
 }
 
+ShowEmptyLines()
+{
+    echo && echo && echo
+}
+
 SetAndroidSpecificVariables()
 {
     # target
@@ -586,11 +591,16 @@ BuildProject()
         echo "Source files are copied from '${PROJECT_DIR}' to '${BUILD_SUB_DIR}/${PROJECT_SRC_DIR}'." &>> "${LOG_FILE}"
     fi
 
+    echo "${CONFIGURE_TOOL}" ${CONFIGURE_OPTIONS} &>> "${LOG_FILE}"
     "${CONFIGURE_TOOL}" ${CONFIGURE_OPTIONS} &>> "${LOG_FILE}"
+
+    ShowEmptyLines &>> "${LOG_FILE}"
+    echo "${MAKE_TOOL}" ${MAKE_OPTIONS} &>> "${LOG_FILE}"
     "${MAKE_TOOL}" ${MAKE_OPTIONS} &>> "${LOG_FILE}"
 
     if [[ "${SYSTEM}" = *android* ]]
     then
+        ShowEmptyLines &>> "${LOG_FILE}"
         BuildAndroidPackage &>> "${LOG_FILE}"
     fi
 }
@@ -637,14 +647,19 @@ InstallQmakeProject()
     then
         rm -f *.a
     fi
+
+    cd "${BUILD_SUB_DIR}" || return 1
+    ShowEmptyLines &>> "${LOG_FILE}"
+    echo find "../${SYSTEM}-out/" &>> "${LOG_FILE}"
+    find "../${SYSTEM}-out/" &>> "${LOG_FILE}"
+    cp -af *.log "../${SYSTEM}-out" &> /dev/null
 }
 
 InstallUsualProject()
 {
     cd "${BUILD_SUB_DIR}" || return 1
-
-    echo >> "${LOG_FILE}" && echo >> "${LOG_FILE}" && echo >> "${LOG_FILE}"
-
+    ShowEmptyLines &>> "${LOG_FILE}"
+    echo "${MAKE_TOOL}" install -j1 -k DESTDIR="../${SYSTEM}-out" &>> "${LOG_FILE}"
     "${MAKE_TOOL}" install -j1 -k DESTDIR="../${SYSTEM}-out" &>> "${LOG_FILE}"
     [ ! -d "../${SYSTEM}-out" ] && mkdir "../${SYSTEM}-out" || true
     cp -af *.log "../${SYSTEM}-out" &> /dev/null
@@ -681,7 +696,8 @@ InstallToSysroot()
 {
     InstallProject || return 1
     InstallationInfo "${SYSTEM_DIR}"
-    echo >> "${LOG_FILE}" && echo >> "${LOG_FILE}" && echo >> "${LOG_FILE}"
+    ShowEmptyLines &>> "${LOG_FILE}"
+    echo cp -afv "../${SYSTEM}-out"/* "${SYSTEM_DIR}" &>> "${LOG_FILE}"
     cp -afv "../${SYSTEM}-out"/* "${SYSTEM_DIR}" &>> "${LOG_FILE}"
     rm -f  "${SYSTEM_DIR}"/*.log
 }
@@ -703,7 +719,8 @@ InstallToQtSDK()
         if [ "$(grep ^install: Makefile | wc -l)" != "0" ]
         then
             InstallationInfo "${QT_SDK_INSTALL_DIR}"
-            echo >> "${LOG_FILE}" && echo >> "${LOG_FILE}" && echo >> "${LOG_FILE}"
+            ShowEmptyLines &>> "${LOG_FILE}"
+            echo "${MAKE_TOOL}" install -j1 -k &>> "${LOG_FILE}"
             "${MAKE_TOOL}" install -j1 -k &>> "${LOG_FILE}"
             return 0
         fi
@@ -711,7 +728,8 @@ InstallToQtSDK()
 
     InstallProject || return 1
     InstallationInfo "${QT_SDK_INSTALL_DIR}"
-    echo >> "${LOG_FILE}" && echo >> "${LOG_FILE}" && echo >> "${LOG_FILE}"
+    ShowEmptyLines &>> "${LOG_FILE}"
+    echo cp -afv "../${SYSTEM}-out"/* "${QT_SDK_INSTALL_DIR}" &>> "${LOG_FILE}"
     cp -afv "../${SYSTEM}-out"/* "${QT_SDK_INSTALL_DIR}" &>> "${LOG_FILE}"
     rm -f  "${QT_SDK_INSTALL_DIR}"/*.log
 }
