@@ -548,8 +548,10 @@ BuildAndroidPackage()
         fi
 
         rm -rf "${ANDROID_BUILD_DIR}"
+        echo '+' "${MAKE_TOOL}" install -j1 -k INSTALL_ROOT="${ANDROID_BUILD_DIR}"
         "${MAKE_TOOL}" install -j1 -k INSTALL_ROOT="${ANDROID_BUILD_DIR}"
 
+        set -x
         androiddeployqt \
             --input  "${ANDROID_SETTINGS_FILE}" \
             --output "${ANDROID_BUILD_DIR}" \
@@ -561,6 +563,7 @@ BuildAndroidPackage()
         #    --sign foo bar \
         #    --sign 'example' \
         #    --storepass '123456' \
+        { set +x; } 2>/dev/null
 
         if ! IsAndroidDeployQtSafePath "${ANDROID_BUILD_DIR}"
         then
@@ -575,8 +578,10 @@ BuildAndroidPackage()
         # APP_FILE_NAME=QtApp-release-unsigned.apk
         local APP_FILE_NAME=QtApp-debug-unaligned.apk
         local PROJECT_NAME=$(basename "${PROJECT_DIR}")
+        set -x
         cp -af "./android-build/bin/${APP_FILE_NAME}" \
                "./${PROJECT_NAME}_${SYSTEM}.apk"
+        { set +x; } 2>/dev/null
     fi
 }
 
@@ -588,14 +593,14 @@ BuildProject()
     then
         mkdir -p "${BUILD_SUB_DIR}/${PROJECT_SRC_DIR}"
         cp -af "${PROJECT_DIR}"/* "${BUILD_SUB_DIR}/${PROJECT_SRC_DIR}/"
-        echo "Source files are copied from '${PROJECT_DIR}' to '${BUILD_SUB_DIR}/${PROJECT_SRC_DIR}'." &>> "${LOG_FILE}"
+        echo "! Source files are copied from '${PROJECT_DIR}' to '${BUILD_SUB_DIR}/${PROJECT_SRC_DIR}'." &>> "${LOG_FILE}"
     fi
 
-    echo "${CONFIGURE_TOOL}" ${CONFIGURE_OPTIONS} &>> "${LOG_FILE}"
+    echo '+' "${CONFIGURE_TOOL}" ${CONFIGURE_OPTIONS} &>> "${LOG_FILE}"
     "${CONFIGURE_TOOL}" ${CONFIGURE_OPTIONS} &>> "${LOG_FILE}"
 
     ShowEmptyLines &>> "${LOG_FILE}"
-    echo "${MAKE_TOOL}" ${MAKE_OPTIONS} &>> "${LOG_FILE}"
+    echo '+' "${MAKE_TOOL}" ${MAKE_OPTIONS} &>> "${LOG_FILE}"
     "${MAKE_TOOL}" ${MAKE_OPTIONS} &>> "${LOG_FILE}"
 
     if [[ "${SYSTEM}" = *android* ]]
@@ -650,7 +655,7 @@ InstallQmakeProject()
 
     cd "${BUILD_SUB_DIR}" || return 1
     ShowEmptyLines &>> "${LOG_FILE}"
-    echo find "../${SYSTEM}-out/" &>> "${LOG_FILE}"
+    echo '+' find "../${SYSTEM}-out/" &>> "${LOG_FILE}"
     find "../${SYSTEM}-out/" &>> "${LOG_FILE}"
     cp -af *.log "../${SYSTEM}-out" &> /dev/null
 }
@@ -659,7 +664,7 @@ InstallUsualProject()
 {
     cd "${BUILD_SUB_DIR}" || return 1
     ShowEmptyLines &>> "${LOG_FILE}"
-    echo "${MAKE_TOOL}" install -j1 -k DESTDIR="../${SYSTEM}-out" &>> "${LOG_FILE}"
+    echo '+' "${MAKE_TOOL}" install -j1 -k DESTDIR="../${SYSTEM}-out" &>> "${LOG_FILE}"
     "${MAKE_TOOL}" install -j1 -k DESTDIR="../${SYSTEM}-out" &>> "${LOG_FILE}"
     [ ! -d "../${SYSTEM}-out" ] && mkdir "../${SYSTEM}-out" || true
     cp -af *.log "../${SYSTEM}-out" &> /dev/null
@@ -697,7 +702,7 @@ InstallToSysroot()
     InstallProject || return 1
     InstallationInfo "${SYSTEM_DIR}"
     ShowEmptyLines &>> "${LOG_FILE}"
-    echo cp -afv "../${SYSTEM}-out"/* "${SYSTEM_DIR}" &>> "${LOG_FILE}"
+    echo '+' cp -afv "../${SYSTEM}-out"/* "${SYSTEM_DIR}" &>> "${LOG_FILE}"
     cp -afv "../${SYSTEM}-out"/* "${SYSTEM_DIR}" &>> "${LOG_FILE}"
     rm -f  "${SYSTEM_DIR}"/*.log
 }
@@ -720,7 +725,7 @@ InstallToQtSDK()
         then
             InstallationInfo "${QT_SDK_INSTALL_DIR}"
             ShowEmptyLines &>> "${LOG_FILE}"
-            echo "${MAKE_TOOL}" install -j1 -k &>> "${LOG_FILE}"
+            echo '+' "${MAKE_TOOL}" install -j1 -k &>> "${LOG_FILE}"
             "${MAKE_TOOL}" install -j1 -k &>> "${LOG_FILE}"
             return 0
         fi
@@ -729,7 +734,7 @@ InstallToQtSDK()
     InstallProject || return 1
     InstallationInfo "${QT_SDK_INSTALL_DIR}"
     ShowEmptyLines &>> "${LOG_FILE}"
-    echo cp -afv "../${SYSTEM}-out"/* "${QT_SDK_INSTALL_DIR}" &>> "${LOG_FILE}"
+    echo '+' cp -afv "../${SYSTEM}-out"/* "${QT_SDK_INSTALL_DIR}" &>> "${LOG_FILE}"
     cp -afv "../${SYSTEM}-out"/* "${QT_SDK_INSTALL_DIR}" &>> "${LOG_FILE}"
     rm -f  "${QT_SDK_INSTALL_DIR}"/*.log
 }
