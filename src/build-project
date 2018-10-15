@@ -655,29 +655,32 @@ InstallQmakeProject()
 
     cd "${BUILD_SUB_DIR}" || return 1
     ShowEmptyLines &>> "${LOG_FILE}"
-    echo '+' find "../${SYSTEM}-out/" &>> "${LOG_FILE}"
-    find "../${SYSTEM}-out/" &>> "${LOG_FILE}"
-    cp -af *.log "../${SYSTEM}-out" &> /dev/null
-}
-
-InstallUsualProject()
-{
-    cd "${BUILD_SUB_DIR}" || return 1
-    ShowEmptyLines &>> "${LOG_FILE}"
-    echo '+' "${MAKE_TOOL}" install -j1 -k DESTDIR="../${SYSTEM}-out" &>> "${LOG_FILE}"
-    "${MAKE_TOOL}" install -j1 -k DESTDIR="../${SYSTEM}-out" &>> "${LOG_FILE}"
-    [ ! -d "../${SYSTEM}-out" ] && mkdir "../${SYSTEM}-out" || true
-    cp -af *.log "../${SYSTEM}-out" &> /dev/null
+    local DESTDIR="../${SYSTEM}-out"
+    echo '+' find "${DESTDIR}" &>> "${LOG_FILE}"
+    find "${DESTDIR}/" &>> "${LOG_FILE}"
+    cp -af *.log "${DESTDIR}" &> /dev/null
 }
 
 InstallCmakeProject()
 {
-    InstallUsualProject || return 1
+    cd "${BUILD_SUB_DIR}" || return 1
+    ShowEmptyLines &>> "${LOG_FILE}"
+    local DESTDIR="../${SYSTEM}-out"
+    echo '+' "${MAKE_TOOL}" install -j1 -k DESTDIR="${DESTDIR}" &>> "${LOG_FILE}"
+    "${MAKE_TOOL}" install -j1 -k DESTDIR="${DESTDIR}" &>> "${LOG_FILE}"
+    [ ! -d "${DESTDIR}" ] && mkdir "${DESTDIR}" || true
+    cp -af *.log "${DESTDIR}" &> /dev/null
 }
 
 InstallAutotoolsProject()
 {
-    InstallUsualProject || return 1
+    cd "${BUILD_SUB_DIR}" || return 1
+    ShowEmptyLines &>> "${LOG_FILE}"
+    local DESTDIR="$(realpath ${BUILD_SUB_DIR}/../${SYSTEM}-out)"
+    echo '+' "${MAKE_TOOL}" install -j1 -k DESTDIR="${DESTDIR}" &>> "${LOG_FILE}"
+    "${MAKE_TOOL}" install -j1 -k DESTDIR="${DESTDIR}" &>> "${LOG_FILE}"
+    [ ! -d "${DESTDIR}" ] && mkdir "${DESTDIR}" || true
+    cp -af *.log "${DESTDIR}" &> /dev/null
 }
 
 InstallProject()
@@ -702,8 +705,9 @@ InstallToSysroot()
     InstallProject || return 1
     InstallationInfo "${SYSTEM_DIR}"
     ShowEmptyLines &>> "${LOG_FILE}"
-    echo '+' cp -afv "../${SYSTEM}-out"/* "${SYSTEM_DIR}" &>> "${LOG_FILE}"
-    cp -afv "../${SYSTEM}-out"/* "${SYSTEM_DIR}" &>> "${LOG_FILE}"
+    local DESTDIR="../${SYSTEM}-out"
+    echo '+' cp -afv "${DESTDIR}"/* "${SYSTEM_DIR}" &>> "${LOG_FILE}"
+    cp -afv "${DESTDIR}"/* "${SYSTEM_DIR}" &>> "${LOG_FILE}"
     rm -f  "${SYSTEM_DIR}"/*.log
 }
 
@@ -734,8 +738,9 @@ InstallToQtSDK()
     InstallProject || return 1
     InstallationInfo "${QT_SDK_INSTALL_DIR}"
     ShowEmptyLines &>> "${LOG_FILE}"
-    echo '+' cp -afv "../${SYSTEM}-out"/* "${QT_SDK_INSTALL_DIR}" &>> "${LOG_FILE}"
-    cp -afv "../${SYSTEM}-out"/* "${QT_SDK_INSTALL_DIR}" &>> "${LOG_FILE}"
+    local DESTDIR="../${SYSTEM}-out"
+    echo '+' cp -afv "${DESTDIR}"/* "${QT_SDK_INSTALL_DIR}" &>> "${LOG_FILE}"
+    cp -afv "${DESTDIR}"/* "${QT_SDK_INSTALL_DIR}" &>> "${LOG_FILE}"
     rm -f  "${QT_SDK_INSTALL_DIR}"/*.log
 }
 

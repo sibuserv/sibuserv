@@ -7,6 +7,8 @@
 * Use `export LC_ALL="C"` for logging all build tools messages in English.
 * Run `make` without `--ignore-errors` option, `--keep-going` option is used
   instead. This should decrease the build logs size in case of broken builds.
+* Delete InstallUsualProject(): now InstallAutotoolsProject() differs from
+  InstallCmakeProject().
 *** build-supervisor ***
 * Tiny changes in work with git svn.
 
