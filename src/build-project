@@ -330,9 +330,17 @@ EndBuildInfo()
     echo "[done]      ${BUILD_SUB_DIR}"
 }
 
-InstallationInfo()
+BeginInstallationInfo()
 {
     echo "[install]   ${@}"
+}
+
+EndInstallationInfo()
+{
+    if [ -e "${1}" ]
+    then
+        echo "$(date +"[%Y-%m-%d %H:%M:%S]") end of installation" &>> "${1}"
+    fi
 }
 
 ShowEmptyLines()
@@ -685,7 +693,7 @@ InstallAutotoolsProject()
 
 InstallProject()
 {
-    InstallationInfo "${BUILD_SUB_DIR}-out"
+    BeginInstallationInfo "${BUILD_SUB_DIR}-out"
 
     case "${BUILD_SYSTEM_TYPE}" in
     "qmake")
@@ -698,17 +706,20 @@ InstallProject()
         InstallAutotoolsProject || return 1
     ;;
     esac
+
+    EndInstallationInfo "${BUILD_SUB_DIR}-out/build.log"
 }
 
 InstallToSysroot()
 {
     InstallProject || return 1
-    InstallationInfo "${SYSTEM_DIR}"
+    BeginInstallationInfo "${SYSTEM_DIR}"
     ShowEmptyLines &>> "${LOG_FILE}"
     local DESTDIR="../${SYSTEM}-out"
     echo '+' cp -afv "${DESTDIR}"/* "${SYSTEM_DIR}" &>> "${LOG_FILE}"
     cp -afv "${DESTDIR}"/* "${SYSTEM_DIR}" &>> "${LOG_FILE}"
     rm -f  "${SYSTEM_DIR}"/*.log
+    EndInstallationInfo "${LOG_FILE}"
 }
 
 InstallToQtSDK()
@@ -727,21 +738,23 @@ InstallToQtSDK()
         cd "${BUILD_SUB_DIR}" || return 1
         if [ "$(grep ^install: Makefile | wc -l)" != "0" ]
         then
-            InstallationInfo "${QT_SDK_INSTALL_DIR}"
+            BeginInstallationInfo "${QT_SDK_INSTALL_DIR}"
             ShowEmptyLines &>> "${LOG_FILE}"
             echo '+' "${MAKE_TOOL}" install -j1 -k &>> "${LOG_FILE}"
             "${MAKE_TOOL}" install -j1 -k &>> "${LOG_FILE}"
+            EndInstallationInfo "${LOG_FILE}"
             return 0
         fi
     fi
 
     InstallProject || return 1
-    InstallationInfo "${QT_SDK_INSTALL_DIR}"
+    BeginInstallationInfo "${QT_SDK_INSTALL_DIR}"
     ShowEmptyLines &>> "${LOG_FILE}"
     local DESTDIR="../${SYSTEM}-out"
     echo '+' cp -afv "${DESTDIR}"/* "${QT_SDK_INSTALL_DIR}" &>> "${LOG_FILE}"
     cp -afv "${DESTDIR}"/* "${QT_SDK_INSTALL_DIR}" &>> "${LOG_FILE}"
     rm -f  "${QT_SDK_INSTALL_DIR}"/*.log
+    EndInstallationInfo "${LOG_FILE}"
 }
 
 ##### Script body #####
