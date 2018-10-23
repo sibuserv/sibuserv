@@ -2,6 +2,7 @@
 *** common ***
 * Update Qt SDK version from 5.10.1 to 5.11.1.
 * Delete 'qt-sdk-offline' target from Makefile.
+* Update default value of QT_SDK_DIR variable. (See changes in aplump project.)
 *** build-project ***
 * Improve logging of build process: added verbose `make` and `make install`
   strings, added info of copying operations done by script, etc..
