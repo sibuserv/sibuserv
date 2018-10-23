@@ -1,6 +1,7 @@
---- v1.8 (2018-xx-xx) ---
+--- v1.8 (2018-10-xx) ---
 *** common ***
 * Update Qt SDK version from 5.10.1 to 5.11.1.
+* Delete 'qt-sdk-offline' target from Makefile.
 *** build-project ***
 * Improve logging of build process: added verbose `make` and `make install`
   strings, added info of copying operations done by script, etc..

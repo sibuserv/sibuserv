@@ -2,19 +2,8 @@ DESTDIR = /usr
 DOWNLOADER = wget
 GIT = git
 
-QT_SERIES=5.11
-QT_VERSION=5.11.1
-
-QT_SDK_CHECKSUM = 9f13c6f346ac74de85ba01a5328a1e1c # MD5
-
-# https://download.qt.io/official_releases/qt/
-# https://wiki.qt.io/Qt_for_Android_known_issues
-
-QT_SDK_FOR_ANDROID_FILE      = qt-opensource-linux-x64-$(QT_VERSION).run
 QT_SDK_ONLINE_INSTALLER_FILE = qt-unified-linux-x64-online.run
-
-QT_SDK_FOR_ANDROID_URL      = https://download.qt.io/official_releases/qt/$(QT_SERIES)/$(QT_VERSION)
-QT_SDK_ONLINE_INSTALLER_URL = https://download.qt.io/official_releases/online_installers
+QT_SDK_ONLINE_INSTALLER_URL  = https://download.qt.io/official_releases/online_installers
 
 download: check-system linux windows android qt-sdk-online
 
@@ -45,11 +34,6 @@ qt-sdk-online: prepare-dir
 	cd $(CURDIR)/opt && [ -e "$(QT_SDK_ONLINE_INSTALLER_FILE)" ] || \
 		$(DOWNLOADER) $(QT_SDK_ONLINE_INSTALLER_URL)/$(QT_SDK_ONLINE_INSTALLER_FILE)
 	chmod uog+x $(CURDIR)/opt/$(QT_SDK_ONLINE_INSTALLER_FILE)
-
-qt-sdk-offline: prepare-dir
-	cd $(CURDIR)/opt && [ -e "$(QT_SDK_FOR_ANDROID_FILE)" ] || \
-		$(DOWNLOADER) $(QT_SDK_FOR_ANDROID_URL)/$(QT_SDK_FOR_ANDROID_FILE)
-	chmod uog+x $(CURDIR)/opt/$(QT_SDK_FOR_ANDROID_FILE)
 
 install:
 	mkdir -p $(DESTDIR)/bin
