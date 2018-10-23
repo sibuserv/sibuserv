@@ -25,9 +25,12 @@ then
     export SYSTEMS="${SYSTEMS} x86_64-w64-mingw32.shared i686-w64-mingw32.shared"
     export SYSTEMS="${SYSTEMS} Ubuntu-14.04_amd64_shared Ubuntu-14.04_i386_shared"
     # export SYSTEMS="${SYSTEMS} Ubuntu-14.04_i386_static Ubuntu-14.04_amd64_static"
-    # export SYSTEMS="${SYSTEMS} AstraLinux-1.2_static AstraLinux-1.3_static AstraLinux-1.4_static"
+    # export SYSTEMS="${SYSTEMS} AstraLinux-1.5_static AstraLinux-1.4_static AstraLinux-1.3_static"
     export SYSTEMS="${SYSTEMS} android-21_arm android-21_x86"
 fi
+
+[ -z "${AUTORECONF_IS_REQUIRED}" ] && \
+    export AUTORECONF_IS_REQUIRED="false"
 
 ##### Do not edit lines below! #####
 
@@ -295,6 +298,10 @@ DetectBuildAutomationSystemType()
     IsSafePath "${PROJECT_DIR}" && \
         export PROJECT_SRC_DIR="${PROJECT_DIR}" || \
         export PROJECT_SRC_DIR="tmp-sources-dir"
+    if [ "${AUTORECONF_IS_REQUIRED}" = "true" ]
+    then
+        export PROJECT_SRC_DIR="tmp-sources-dir"
+    fi
 
     if [ "$(ls CMakeLists.txt 2> /dev/null | wc -l)" != "0" ]
     then
@@ -303,6 +310,13 @@ DetectBuildAutomationSystemType()
         return 0
     elif [ "$(grep GNU configure 2> /dev/null | wc -l)" != "0" ]
     then
+        export BUILD_SYSTEM_TYPE="autotools"
+        export PROJECT_FILE="${PROJECT_SRC_DIR}/configure"
+        return 0
+    elif [ "$(ls | grep "configure\.ac\|configure\.in" 2> /dev/null | wc -l)" != "0" ]
+    then
+        export AUTORECONF_IS_REQUIRED="true"
+        export PROJECT_SRC_DIR="tmp-sources-dir"
         export BUILD_SYSTEM_TYPE="autotools"
         export PROJECT_FILE="${PROJECT_SRC_DIR}/configure"
         return 0
@@ -595,15 +609,24 @@ BuildAndroidPackage()
 
 BuildProject()
 {
-    cd "${BUILD_SUB_DIR}" || exit 1
-
-    if ! IsSafePath "${PROJECT_DIR}"
+    if [ "${PROJECT_SRC_DIR}" != "${PROJECT_DIR}" ]
     then
+        cd "${BUILD_SUB_DIR}" || exit 1
         mkdir -p "${BUILD_SUB_DIR}/${PROJECT_SRC_DIR}"
         cp -af "${PROJECT_DIR}"/* "${BUILD_SUB_DIR}/${PROJECT_SRC_DIR}/"
         echo "! Source files are copied from '${PROJECT_DIR}' to '${BUILD_SUB_DIR}/${PROJECT_SRC_DIR}'." &>> "${LOG_FILE}"
     fi
 
+    if [ "${BUILD_SYSTEM_TYPE}" = "autotools" ] && \
+       [ "${AUTORECONF_IS_REQUIRED}" = "true" ]
+    then
+        cd "${BUILD_SUB_DIR}/${PROJECT_SRC_DIR}" || exit 1
+        echo '+' autoreconf -fi &>> "${LOG_FILE}"
+        autoreconf -fi &>> "${LOG_FILE}"
+        ShowEmptyLines &>> "${LOG_FILE}"
+    fi
+
+    cd "${BUILD_SUB_DIR}" || exit 1
     echo '+' "${CONFIGURE_TOOL}" ${CONFIGURE_OPTIONS} &>> "${LOG_FILE}"
     "${CONFIGURE_TOOL}" ${CONFIGURE_OPTIONS} &>> "${LOG_FILE}"
 

@@ -7,8 +7,15 @@
 * Use `export LC_ALL="C"` for logging all build tools messages in English.
 * Run `make` without `--ignore-errors` option, `--keep-going` option is used
   instead. This should decrease the build logs size in case of broken builds.
-* Delete InstallUsualProject(): now InstallAutotoolsProject() differs from
-  InstallCmakeProject().
+* Improve build of autotools based projects:
+  - it is possible to call `autoreconf` tool before configuring of project
+    build (see variable AUTORECONF_IS_REQUIRED)
+  - if `configure` script is not present in source tree, but there is file
+    configure.ac or file configure.in, then AUTORECONF_IS_REQUIRED variable
+    will be set to 'true' automatically
+* Improve installation of autotools based projects: now function
+  InstallAutotoolsProject() differs from InstallCmakeProject().
+  InstallUsualProject() function was deleted.
 *** build-supervisor ***
 * Tiny changes in work with git svn.
 
