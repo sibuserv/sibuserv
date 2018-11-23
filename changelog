@@ -1,3 +1,9 @@
+--- v1.9 (2018-xx-xx) ---
+*** build-server-daemon ***
+* Remove protection from simultaneous run of few copies of this script: this is
+  not required because this script typically is not launched by user but is
+  launched by initialization system (for example, by systemd).
+
 --- v1.8 (2018-10-24) ---
 *** common ***
 * Update Qt SDK version from 5.10.1 to 5.11.1.
@@ -27,11 +33,10 @@
 * Rewrite 'android' target in Makefile for downloading of aplump project
   (https://github.com/sibuserv/aplump) instead of direct downloading and
   unpacking of Android SDK and NDK.
-*** build-server-daemon ***
+*** build-supervisor ***
 * Changed algorithm of building of projects: now project is installed just
   after build for current target system without waiting of end of build for
   other target systems.
-*** build-supervisor ***
 * Suppress extra messages during checking of empty git repository.
 
 --- v1.6 (2017-12-15) ---
