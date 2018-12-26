@@ -14,13 +14,13 @@ static code analisys (optionally) for each commit in your qmake-, cmake- and/or
 autotools-based projects.
 
 Currently supported target systems:
-* different GNU/Linux systems (tested for i486, i586, amd64 and armhf)
+* different GNU/Linux systems (tested for i486, i586, i686, amd64 and armhf)
 * MS Windows (tested for i686 and x86_64)
-* Android (tested for ARMv7 and x86)
+* Android (tested for arm64_v8a, armv7 and x86)
 And maybe one day Sibuserv will be able to build C++ apps for macOS too.
 
 This project is not self-contained, it depends on few other projects:
-* LXE – Linux cross-toolchain environment
+* LXE – Linux cross-toolchain environment (for GNU/Linux)
 * MXE – M cross environment (for MS Windows)
 * aplump – plump Android (for Android)
 * official Qt SDK (for Android)
@@ -39,11 +39,12 @@ Screenshots:
   https://tehnick.github.io/sibuserv/screenshots/05.png
 
 Useful links:
-  http://mxe.cc/
+  https://mxe.cc/
   https://github.com/sibuserv/mxe
   https://github.com/sibuserv/lxe
   https://github.com/sibuserv/aplump
   https://github.com/sibuserv/sibuserv-webui
+  https://sibuserv-ci.org/
 
 Important notes:
 If you want to distribute statically linked binaries, you have to check the
