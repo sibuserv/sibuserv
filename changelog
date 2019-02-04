@@ -1,4 +1,8 @@
 --- v1.9 (2019-xx-xx) ---
+*** build-project ***
+* Install only build.log to destination directory. This change will be
+  noticeable only in autotools based projects where file config.log has been
+  copied earlier on installation step.
 *** build-server-daemon ***
 * Remove protection from simultaneous run of few copies of this script: this is
   not required because this script typically is not launched by user but is

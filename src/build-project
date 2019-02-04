@@ -689,7 +689,7 @@ InstallQmakeProject()
     local DESTDIR="../${SYSTEM}-out"
     echo '+' find "${DESTDIR}" &>> "${LOG_FILE}"
     find "${DESTDIR}/" &>> "${LOG_FILE}"
-    cp -af *.log "${DESTDIR}" &> /dev/null
+    cp -af build.log "${DESTDIR}" &> /dev/null
 }
 
 InstallCmakeProject()
@@ -700,7 +700,7 @@ InstallCmakeProject()
     echo '+' "${MAKE_TOOL}" install -j1 -k DESTDIR="${DESTDIR}" &>> "${LOG_FILE}"
     "${MAKE_TOOL}" install -j1 -k DESTDIR="${DESTDIR}" &>> "${LOG_FILE}"
     [ ! -d "${DESTDIR}" ] && mkdir "${DESTDIR}" || true
-    cp -af *.log "${DESTDIR}" &> /dev/null
+    cp -af build.log "${DESTDIR}" &> /dev/null
 }
 
 InstallAutotoolsProject()
@@ -711,7 +711,7 @@ InstallAutotoolsProject()
     echo '+' "${MAKE_TOOL}" install -j1 -k DESTDIR="${DESTDIR}" &>> "${LOG_FILE}"
     "${MAKE_TOOL}" install -j1 -k DESTDIR="${DESTDIR}" &>> "${LOG_FILE}"
     [ ! -d "${DESTDIR}" ] && mkdir "${DESTDIR}" || true
-    cp -af *.log "${DESTDIR}" &> /dev/null
+    cp -af build.log "${DESTDIR}" &> /dev/null
 }
 
 InstallProject()
