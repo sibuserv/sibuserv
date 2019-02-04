@@ -1,4 +1,4 @@
---- v1.9 (2018-xx-xx) ---
+--- v1.9 (2019-xx-xx) ---
 *** build-server-daemon ***
 * Remove protection from simultaneous run of few copies of this script: this is
   not required because this script typically is not launched by user but is
