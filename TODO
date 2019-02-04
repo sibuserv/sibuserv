@@ -13,6 +13,6 @@
 ? Add support of static code analysis using PVS-Studio Analyzer
   (https://www.viva64.com/en/pvs-studio/).
 ? Add support of packaging into Appimage packages (https://appimage.org/).
-? Add support of packaging into Flatpak packages (http://flatpak.org/).
-? Add support of packaging into Snap packages (http://snapcraft.io/).
+? Add support of packaging into Flatpak packages (https://flatpak.org/).
+? Add support of packaging into Snap packages (https://snapcraft.io/).
 ? Add support of build for macOS.
