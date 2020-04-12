@@ -1,4 +1,4 @@
---- v1.9 (2019-xx-xx) ---
+--- v1.9 (2020-xx-xx) ---
 *** build-project ***
 * Install only build.log to destination directory. This change will be
   noticeable only in autotools based projects where file config.log has been
@@ -7,6 +7,10 @@
 * Remove protection from simultaneous run of few copies of this script: this is
   not required because this script typically is not launched by user but is
   launched by initialization system (for example, by systemd).
+*** build-supervisor ***
+* Update parser for cppcheck.log files which generates cppcheck.stats.txt files
+  after changes in recent verisions of cppcheck tool.
+
 
 --- v1.8 (2018-10-24) ---
 *** common ***

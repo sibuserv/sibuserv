@@ -130,7 +130,7 @@ StartStaticCodeAnalysis()
         cppcheck -q ${CPPCHECK_OPTIONS} . &>> "${LOG_FILE}"
         echo "$(date +"[%Y-%m-%d %H:%M:%S]") end of code analysis" &>> "${LOG_FILE}"
         STAT_FILE="${STATIC_CODE_ANALYSIS_LOGS_DIR}/cppcheck.stats.txt"
-        grep ': (' "${LOG_FILE}" | tr '()' '*' | cut -d* -f2 | sort | uniq -c &> "${STAT_FILE}"
+        grep ': ' "${LOG_FILE}" | tr ': ' '*' | cut -d* -f5 | sort | uniq -c &> "${STAT_FILE}"
     fi
     if [ "${ENABLE_CPPCHECK_XML}" = "true" ] && \
        [ $(which cppcheck | wc -l) = "1" ]
